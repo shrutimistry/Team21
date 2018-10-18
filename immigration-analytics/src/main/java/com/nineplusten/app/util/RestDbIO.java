@@ -1,6 +1,5 @@
 package com.nineplusten.app.util;
 
-import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,19 +18,19 @@ public class RestDbIO {
     return response;
   }
 
-  public static HttpResponse<JsonNode> getResponse(String route,
-      Map<String, Object> queryParameters) throws UnirestException {
-    HttpResponse<JsonNode> response =
-        Unirest.get(API_URL + "{route}").routeParam("route", route).header("x-apikey", API_KEY)
-            .header("cache-control", "no-cache").queryString(queryParameters).asJson();
+  public static HttpResponse<JsonNode> getResponse(String route, JSONObject jsonQuery)
+      throws UnirestException {
+    HttpResponse<JsonNode> response = ((RestDbIOGetRequest) UnirestQuery.get(API_URL + "{route}")
+        .routeParam("route", route).header("x-apikey", API_KEY).header("cache-control", "no-cache"))
+            .queryString(jsonQuery).asJson();
     return response;
   }
 
   public static HttpResponse<JsonNode> getResponse(String route, String queryField,
       Object queryValue) throws UnirestException {
-    HttpResponse<JsonNode> response =
-        Unirest.get(API_URL + "{route}").routeParam("route", route).header("x-apikey", API_KEY)
-            .header("cache-control", "no-cache").queryString(queryField, queryValue).asJson();
+    HttpResponse<JsonNode> response = ((RestDbIOGetRequest) UnirestQuery.get(API_URL + "{route}")
+        .routeParam("route", route).header("x-apikey", API_KEY).header("cache-control", "no-cache"))
+            .queryString(queryField, queryValue).asJson();
     return response;
   }
 
@@ -48,10 +47,9 @@ public class RestDbIO {
     return result;
   }
 
-  public static JSONArray get(String route, Map<String, Object> queryParameters)
-      throws UnirestException {
+  public static JSONArray get(String route, JSONObject jsonQuery) throws UnirestException {
     JSONArray result = null;
-    HttpResponse<JsonNode> response = getResponse(route, queryParameters);
+    HttpResponse<JsonNode> response = getResponse(route, jsonQuery);
     // Check for OK (works because not async)
     if (response.getStatus() == HttpStatus.SC_OK) {
       JsonNode body = response.getBody();
@@ -165,9 +163,28 @@ public class RestDbIO {
 
   public static HttpResponse<JsonNode> deleteResponse(String route, String[] objectIds)
       throws UnirestException {
-    HttpResponse<JsonNode> response = Unirest.delete(API_URL + "{route}/*").routeParam("route", route)
-        .header("content-type", "application/json").header("x-apikey", API_KEY)
-        .header("cache-control", "no-cache").body(new JSONArray(objectIds)).asJson();
+    HttpResponse<JsonNode> response =
+        Unirest.delete(API_URL + "{route}/*").routeParam("route", route)
+            .header("content-type", "application/json").header("x-apikey", API_KEY)
+            .header("cache-control", "no-cache").body(new JSONArray(objectIds)).asJson();
+    return response;
+  }
+
+  public static HttpResponse<JsonNode> deleteResponse(String route, String name, Object value)
+      throws UnirestException {
+    HttpResponse<JsonNode> response =
+        ((RestDbIOBodyRequest) UnirestQuery.delete(API_URL + "{route}/*").routeParam("route", route)
+            .header("content-type", "application/json").header("x-apikey", API_KEY)
+            .header("cache-control", "no-cache")).queryString(name, value).asJson();
+    return response;
+  }
+
+  public static HttpResponse<JsonNode> deleteResponse(String route, JSONObject jsonQuery)
+      throws UnirestException {
+    HttpResponse<JsonNode> response =
+        ((RestDbIOBodyRequest) UnirestQuery.delete(API_URL + "{route}/*").routeParam("route", route)
+            .header("content-type", "application/json").header("x-apikey", API_KEY)
+            .header("cache-control", "no-cache")).queryString(jsonQuery).asJson();
     return response;
   }
 
@@ -178,6 +195,16 @@ public class RestDbIO {
 
   public static boolean delete(String route, String[] objectIds) throws UnirestException {
     HttpResponse<JsonNode> response = deleteResponse(route, objectIds);
+    return response.getStatus() == HttpStatus.SC_OK;
+  }
+
+  public static boolean delete(String route, String name, Object value) throws UnirestException {
+    HttpResponse<JsonNode> response = deleteResponse(route, name, value);
+    return response.getStatus() == HttpStatus.SC_OK;
+  }
+
+  public static boolean delete(String route, JSONObject jsonQuery) throws UnirestException {
+    HttpResponse<JsonNode> response = deleteResponse(route, jsonQuery);
     return response.getStatus() == HttpStatus.SC_OK;
   }
 

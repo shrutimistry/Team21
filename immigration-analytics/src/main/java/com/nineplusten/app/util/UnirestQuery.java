@@ -11,6 +11,6 @@ public class UnirestQuery extends Unirest {
   }
 
   public static HttpRequestWithBody delete(String url) {
-    return new HttpRequestWithBody(HttpMethod.DELETE, url);
+    return new RestDbIOBodyRequest(HttpMethod.DELETE, url);
   }
 }

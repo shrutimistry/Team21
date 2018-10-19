@@ -21,6 +21,7 @@ public class AccountCreationController {
    * This will show text for agency only
    *
    */
+  @FXML
   private void comboBoxWasUpdate() {
     if (comboBox.getValue().toString() == "Agency") {
       this.comboBoxLbael.setVisible(true);
@@ -35,6 +36,7 @@ public class AccountCreationController {
    * this is action call for submit button
    * @param action
    */
+  @FXML
   private void submitButtonAction(ActionEvent action) {
     String s = "add action here";
   }
@@ -42,6 +44,7 @@ public class AccountCreationController {
   /**
    * this is action call for cancel button
    */
+  @FXML
   private void cancelButtonAction(ActionEvent action) {
     String s = "add action here";
   }

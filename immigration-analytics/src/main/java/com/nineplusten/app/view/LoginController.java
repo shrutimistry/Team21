@@ -61,6 +61,7 @@ public class LoginController {
         User user = ls.getValue();
         if (user != null) {
           mainApp.getSession().sessionUserProperty().set(user);
+          mainApp.showLandingView();
         } else {
           // technically won't need this
           mainApp.getSession().invalidateSession();

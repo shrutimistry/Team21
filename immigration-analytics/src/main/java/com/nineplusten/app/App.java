@@ -68,6 +68,20 @@ public class App extends Application {
     }
   }
   
+  public void showLandingView() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(App.class.getResource("view/AccountCreation.fxml"));
+      AnchorPane landingView = (AnchorPane) loader.load();
+
+      rootLayout.setCenter(landingView);
+      
+      // AccountCreationController controller = loader.getController();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
   public SessionModel getSession() {
     return session;
   }

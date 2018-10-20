@@ -1,6 +1,8 @@
 package com.nineplusten.app;
 
 import java.io.IOException;
+import com.nineplusten.app.model.SessionModel;
+import com.nineplusten.app.view.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,6 +17,11 @@ import javafx.stage.Stage;
 public class App extends Application {
   private Stage primaryStage;
   private BorderPane rootLayout;
+  private SessionModel session;
+  
+  public App() {
+    session = new SessionModel();
+  }
 
   public static void main(String[] args) {
     launch(args);
@@ -53,8 +60,15 @@ public class App extends Application {
       AnchorPane loginView = (AnchorPane) loader.load();
 
       rootLayout.setCenter(loginView);
+      
+      LoginController controller = loader.getController();
+      controller.setMainApp(this);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+  
+  public SessionModel getSession() {
+    return session;
   }
 }

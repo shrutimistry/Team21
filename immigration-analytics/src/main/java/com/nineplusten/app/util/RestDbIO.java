@@ -37,6 +37,22 @@ public class RestDbIO {
         .header("x-apikey", API_KEY).header("cache-control", "no-cache").asJson();
     return response;
   }
+  
+  /**
+   * Makes a GET request to restdb.io. Returns the full HTTP response.
+   * 
+   * Usage: getResponse("/users", {object_id});
+   *
+   * @param route the API path appended to host URL
+   * @param objectId the object _id value
+   * @return the HTTP response from restdb.io server
+   * @throws UnirestException Java lib exception (usually for poorly formed requests)
+   */
+  public static HttpResponse<JsonNode> getResponse(String route, String objectId) throws UnirestException {
+    HttpResponse<JsonNode> response = Unirest.get(API_URL + "{route}/{ID}").routeParam("route", route).
+        routeParam("ID", objectId).header("x-apikey", API_KEY).header("cache-control", "no-cache").asJson();
+    return response;
+  }
 
   /**
    * Makes a GET request to restdb.io using a restdb.io query (see
@@ -44,9 +60,7 @@ public class RestDbIO {
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "admin");
-   * getResponse("/users", o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "admin"); getResponse("/users", o);
    * 
    * @param route the API path appended to host URL
    * @param jsonQuery a restdb.io query (see https://restdb.io/docs/querying-with-the-api#restdb)
@@ -104,15 +118,35 @@ public class RestDbIO {
     }
     return result;
   }
+  
+  /**
+   * Makes a GET request to restdb.io. Returns a JSONArray consisting of JSONObjects.
+   * 
+   * Usage: get("/users", {object_id});
+   *
+   * @param route the API path appended to host URL
+   * @return the JSONArray object consisting of all items in the collection
+   * @throws UnirestException Java lib exception (usually for poorly formed requests)
+   */
+  public static JSONArray get(String route, String objectId) throws UnirestException {
+    JSONArray result = null;
+    HttpResponse<JsonNode> response = getResponse(route, objectId);
+    // Check for OK (works because not async)
+    if (response.getStatus() == HttpStatus.SC_OK) {
+      JsonNode body = response.getBody();
+      if (body != null) {
+        result = body.getArray();
+      }
+    }
+    return result;
+  }
 
   /**
    * Makes a GET request to restdb.io using a restdb.io query (see
-   * https://restdb.io/docs/querying-with-the-api#restdb).
-   * Returns a JSONArray consisting of JSONObjects.
+   * https://restdb.io/docs/querying-with-the-api#restdb). Returns a JSONArray consisting of
+   * JSONObjects.
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "admin");
-   * get("/users", o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "admin"); get("/users", o);
    *
    * @param route the API path appended to host URL
    * @param jsonQuery a restdb.io query (see https://restdb.io/docs/querying-with-the-api#restdb)
@@ -161,19 +195,16 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a POST request to restdb.io with a specified body (see API docs for body format).
-   * Returns the full HTTP response.
+   * Makes a POST request to restdb.io with a specified body (see API docs for body format). Returns
+   * the full HTTP response.
    *
    * Usage:
    * 
-   * JSONObject body = new JSONObject();
-   * o.put("user_id", "test123");
-   * o.put("email", "test123@example.com");
-   * o.put("active", true);
-   * postResponse("/users", body);
+   * JSONObject body = new JSONObject(); o.put("user_id", "test123"); o.put("email",
+   * "test123@example.com"); o.put("active", true); postResponse("/users", body);
    * 
    * @param route the API path appended to host URL
-   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper) 
+   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper)
    *        types
    * @return the HTTP response from restdb.io server
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
@@ -199,19 +230,16 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a POST request to restdb.io with a specified body (see API docs for body format).
-   * Returns true if the request is successful (HTTP 200).
+   * Makes a POST request to restdb.io with a specified body (see API docs for body format). Returns
+   * true if the request is successful (HTTP 200).
    * 
    * Usage:
    * 
-   * JSONObject body = new JSONObject();
-   * o.put("user_id", "test123");
-   * o.put("email", "test123@example.com");
-   * o.put("active", true);
-   * post("/users", body);
+   * JSONObject body = new JSONObject(); o.put("user_id", "test123"); o.put("email",
+   * "test123@example.com"); o.put("active", true); post("/users", body);
    *
    * @param route the API path appended to host URL
-   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper) 
+   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper)
    *        types
    * @return true, if request is successful (HTTP 200)
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
@@ -222,22 +250,19 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a PUT request to restdb.io with a specified body (see API docs for body format).
-   * Returns the full HTTP response.
+   * Makes a PUT request to restdb.io with a specified body (see API docs for body format). Returns
+   * the full HTTP response.
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "test321");
-   * o.put("email", "test123@example.com");
-   * o.put("active", true);
-   * putResponse("/users", {object_id}, o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "test321"); o.put("email",
+   * "test123@example.com"); o.put("active", true); putResponse("/users", {object_id}, o);
    * 
    * (where {object_id} refers to the specific ID to modify)
    *
    * @param route the API path appended to host URL
    * @param objectId the _id of the object being modified
-   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper) 
+   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper)
    *        types
    * @return the HTTP response from restdb.io server
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
@@ -265,22 +290,19 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a PUT request to restdb.io with a specified body (see API docs for body format).
-   * Returns true if the request is successful (HTTP 200).
+   * Makes a PUT request to restdb.io with a specified body (see API docs for body format). Returns
+   * true if the request is successful (HTTP 200).
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "test321");
-   * o.put("email", "test123@example.com");
-   * o.put("active", true);
-   * put("/users", {object_id}, o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "test321"); o.put("email",
+   * "test123@example.com"); o.put("active", true); put("/users", {object_id}, o);
    * 
    * (where {object_id} refers to the specific ID to modify)
    *
    * @param route the API path appended to host URL
    * @param objectId the _id of the object being modified
-   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper) 
+   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper)
    *        types
    * @return true, if request is successful (HTTP 200)
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
@@ -296,17 +318,14 @@ public class RestDbIO {
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "test123");
-   * o.put("email", "test123@example.com");
-   * o.put("active", true);
-   * patchResponse("/users", {object_id}, o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "test123"); o.put("email",
+   * "test123@example.com"); o.put("active", true); patchResponse("/users", {object_id}, o);
    * 
    * (where {object_id} refers to the specific ID to modify)
    *
    * @param route the API path appended to host URL
    * @param objectId the _id of the object being modified
-   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper) 
+   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper)
    *        types
    * @return the HTTP response from restdb.io server
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
@@ -339,17 +358,14 @@ public class RestDbIO {
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "test123");
-   * o.put("email", "test123@example.com");
-   * o.put("active", true);
-   * patch("/users", {object_id}, o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "test123"); o.put("email",
+   * "test123@example.com"); o.put("active", true); patch("/users", {object_id}, o);
    * 
    * (where {object_id} refers to the specific ID to modify)
    *
    * @param route the API path appended to host URL
    * @param objectId the _id of the object being modified
-   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper) 
+   * @param body the request body. Must be either JSONObject, JSONArray, or Object (with wrapper)
    *        types
    * @return true, if request is successful (HTTP 200)
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
@@ -360,8 +376,8 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io and deletes the object with the specified id.
-   * Returns the full HTTP response.
+   * Makes a DELETE request to restdb.io and deletes the object with the specified id. Returns the
+   * full HTTP response.
    * 
    * Usage:
    * 
@@ -383,13 +399,12 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io and deletes all objects with the specified ids.
-   * Returns the full HTTP response.
+   * Makes a DELETE request to restdb.io and deletes all objects with the specified ids. Returns the
+   * full HTTP response.
    * 
    * Usage:
    * 
-   * String [] ids = {object_id_1, object_id_2};
-   * deleteResponse("/users", ids);
+   * String [] ids = {object_id_1, object_id_2}; deleteResponse("/users", ids);
    *
    * @param route the API path appended to host URL
    * @param objectIds the object ids ("_id") to delete (as a String array)
@@ -406,8 +421,8 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io using a simplified query (key/value).
-   * Returns the full HTTP response.
+   * Makes a DELETE request to restdb.io using a simplified query (key/value). Returns the full HTTP
+   * response.
    * 
    * Usage:
    * 
@@ -429,14 +444,12 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io using a restdb.io query (see 
+   * Makes a DELETE request to restdb.io using a restdb.io query (see
    * https://restdb.io/docs/querying-with-the-api#restdb). Returns the full HTTP response.
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "test123");
-   * deleteResponse("/users", o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "test123"); deleteResponse("/users", o);
    *
    * @param route the API path appended to host URL
    * @param jsonQuery a restdb.io query (see https://restdb.io/docs/querying-with-the-api#restdb)
@@ -453,8 +466,8 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io and deletes the object with the specified id.
-   * Returns true if the request is successful (HTTP 200).
+   * Makes a DELETE request to restdb.io and deletes the object with the specified id. Returns true
+   * if the request is successful (HTTP 200).
    * 
    * Usage:
    * 
@@ -473,13 +486,12 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io and deletes all objects with the specified ids.
-   * Returns true if the request is successful (HTTP 200).
+   * Makes a DELETE request to restdb.io and deletes all objects with the specified ids. Returns
+   * true if the request is successful (HTTP 200).
    * 
    * Usage:
    * 
-   * String [] ids = {object_id_1, object_id_2};
-   * delete("/users", ids);
+   * String [] ids = {object_id_1, object_id_2}; delete("/users", ids);
    *
    * @param route the API path appended to host URL
    * @param objectIds the object ids ("_id") to delete (as a String array)
@@ -492,8 +504,8 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io using a simplified query (key/value).
-   * Returns true if the request is successful (HTTP 200).
+   * Makes a DELETE request to restdb.io using a simplified query (key/value). Returns true if the
+   * request is successful (HTTP 200).
    * 
    * Usage:
    * 
@@ -511,15 +523,13 @@ public class RestDbIO {
   }
 
   /**
-   * Makes a DELETE request to restdb.io using a restdb.io query (see 
-   * https://restdb.io/docs/querying-with-the-api#restdb). Returns true if the request
-   * is successful (HTTP 200).
+   * Makes a DELETE request to restdb.io using a restdb.io query (see
+   * https://restdb.io/docs/querying-with-the-api#restdb). Returns true if the request is successful
+   * (HTTP 200).
    * 
    * Usage:
    * 
-   * JSONObject o = new JSONObject();
-   * o.put("user_id", "test123");
-   * deleteResponse("/users", o);
+   * JSONObject o = new JSONObject(); o.put("user_id", "test123"); deleteResponse("/users", o);
    *
    * @param route the API path appended to host URL
    * @param jsonQuery a restdb.io query (see https://restdb.io/docs/querying-with-the-api#restdb)
@@ -532,8 +542,8 @@ public class RestDbIO {
   }
 
   /**
-   * Utility helper method to automatically convert JSONArray to JSONObject iff
-   * the JSONArray length == 1. If the requirement is not met, null is returned.
+   * Utility helper method to automatically convert JSONArray to JSONObject iff the JSONArray length
+   * == 1. If the requirement is not met, null is returned.
    *
    * @param jsonResponse the JSONArray object with length == 1
    * @return the JSON object
@@ -542,8 +552,6 @@ public class RestDbIO {
     JSONObject jsonObj = null;
     if (jsonResponse != null && jsonResponse.length() == 1) {
       jsonObj = jsonResponse.getJSONObject(0);
-    } else {
-      System.out.println("Input was null or contained multiple JSON objects.");
     }
     return jsonObj;
   }

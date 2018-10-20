@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -31,11 +32,17 @@
                   <Font size="16.0" />
                </font>
             </PasswordField>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loginAction" text="Sign-in">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Button>
+            <AnchorPane prefHeight="38.0" prefWidth="300.0">
+               <children>
+                  <Button fx:id="loginButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loginAction" prefHeight="38.0" prefWidth="300.0" text="Sign-in">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <ProgressIndicator fx:id="lsRunning" layoutX="137.0" layoutY="6.0" prefHeight="26.0" prefWidth="26.0" visible="false" />
+               </children>
+            </AnchorPane>
+            <Label fx:id="message" />
          </children>
          <padding>
             <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

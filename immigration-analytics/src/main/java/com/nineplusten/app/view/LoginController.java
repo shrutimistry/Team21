@@ -1,51 +1,88 @@
 package com.nineplusten.app.view;
 
-import java.nio.charset.StandardCharsets;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import com.google.common.hash.Hashing;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.nineplusten.app.util.RestDbIO;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.nineplusten.app.App;
+import com.nineplusten.app.model.User;
+import com.nineplusten.app.service.LoginService;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 
 public class LoginController {
   @FXML
   private TextField username;
   @FXML
   private PasswordField password;
+  @FXML
+  private Button loginButton;
+  @FXML
+  private Label message;
+  @FXML
+  private ProgressIndicator lsRunning;
+
+  private Gson gson;
+  private LoginService ls;
+  private App mainApp;
+
+  public LoginController() {
+    gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create();
+  }
+
+  @FXML
+  private void initialize() {
+    ls = new LoginService(username.textProperty(), password.textProperty(), gson);
+    lsRunning.visibleProperty().bind(ls.runningProperty());
+    loginButton.visibleProperty().bind(ls.runningProperty().not());
+    configureBehaviours();
+  }
 
   @FXML
   private void loginAction(ActionEvent e) {
-    System.out.println(verifyUserCredentials(username.getText(), password.getText()));
+    message.setText("");
+    if (!ls.isRunning()) {
+      ls.restart();
+    }
   }
 
-  private boolean verifyUserCredentials(String username, String password) {
-    boolean verified = false;
-    JSONArray userResult;
-    try {
-      // Retrieve JSONarray for login user, query by unique id
-      userResult = RestDbIO.get("/users", "user_id", username);
-    } catch (UnirestException e) {
-      // Connection failure
-      System.out.println("Failed to reach database: " + e.getStackTrace());
-      return false;
-    }
-    // Attempt to retrieve single object from JSON array
-    // If lookup failed, user == null
-    JSONObject user = RestDbIO.singleResultToJSONObject(userResult);
-    // If user exists, verify password
-    if (user != null) {
-      String salt = user.getString("salt");
-      password = salt + password;
-      String pwdLocalHash =
-          Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
-      String pwdDBHash = user.getString("user_pw");
-      verified = pwdLocalHash.equalsIgnoreCase(pwdDBHash);
-    }
-    return verified;
+  private void configureBehaviours() {
+    ls.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+      @Override
+      public void handle(WorkerStateEvent event) {
+        User user = ls.getValue();
+        if (user != null) {
+          mainApp.getSession().sessionUserProperty().set(user);
+        } else {
+          // technically won't need this
+          mainApp.getSession().invalidateSession();
+
+          message.setTextFill(Color.RED);
+          message.setText("Authentication failure");
+        }
+      }
+    });
+    ls.setOnFailed(new EventHandler<WorkerStateEvent>() {
+      @Override
+      public void handle(WorkerStateEvent event) {
+        Throwable throwable = ls.getException();
+        throwable.printStackTrace();
+      }
+    });
   }
+
+  public void setMainApp(App mainApp) {
+    this.mainApp = mainApp;
+  }
+
+
 
 }

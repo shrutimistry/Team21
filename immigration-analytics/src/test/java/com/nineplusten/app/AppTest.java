@@ -1,4 +1,4 @@
-package com.nineplusten.app.immigration_analytics;
+package com.nineplusten.app;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -60,7 +60,6 @@ public class App extends Application {
       AnchorPane loginView = (AnchorPane) loader.load();
 
       rootLayout.setCenter(loginView);
-      
       LoginController controller = loader.getController();
       controller.setMainApp(this);
     } catch (IOException e) {
@@ -71,7 +70,7 @@ public class App extends Application {
   public void showLandingView() {
     try {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(App.class.getResource("view/AccountCreation.fxml"));
+      loader.setLocation(App.class.getResource("view/TabPane.fxml"));
       AnchorPane landingView = (AnchorPane) loader.load();
 
       rootLayout.setCenter(landingView);

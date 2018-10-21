@@ -4,16 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class AccountCreationController {
   
   //These items are for the combox set up
   @FXML private ComboBox<String> comboBox;
-  @FXML private Label comboBoxLbael;
+  @FXML private Label comboBoxLabel;
   @FXML private TextField AgencyNameText;
   @FXML private TextField UserNameText;
   @FXML private TextField PasswordText;
   @FXML private TextField EmailText;
+  @FXML private VBox vboxholder;
   
   public AccountCreationController() {
   }
@@ -24,11 +26,9 @@ public class AccountCreationController {
   @FXML
   private void comboBoxWasUpdate() {
     if (comboBox.getValue().toString() == "Agency") {
-      this.comboBoxLbael.setVisible(true);
-      this.AgencyNameText.setVisible(true);
+      vboxholder.setVisible(true);
     } else {
-      this.comboBoxLbael.setVisible(false);
-      this.AgencyNameText.setVisible(false);
+      vboxholder.setVisible(false);
     }
     
   }
@@ -56,8 +56,7 @@ public class AccountCreationController {
   private void initialize() {
     // this is for configuring the comboBox
     comboBox.getItems().addAll("TEQ", "Agency", "UTSC");
-    comboBoxLbael.setVisible(false);
-    AgencyNameText.setVisible(false);
-    
+    vboxholder.setVisible(false);
+
   }
 }

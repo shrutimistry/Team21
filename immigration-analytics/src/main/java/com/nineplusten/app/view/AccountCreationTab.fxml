@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.AccountCreationController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.AccountCreationController">
     <children>
     <GridPane layoutX="360.0" layoutY="28.0" prefHeight="219.0" prefWidth="240.0">
         <columnConstraints>
@@ -33,16 +33,16 @@
             <Label text="Email" GridPane.rowIndex="2" />
         </children>
     </GridPane>
-    <VBox fx:id="vboxholder" layoutX="378.0" layoutY="282.0" prefHeight="268.0" prefWidth="188.0" spacing="10.0">
+    <VBox fx:id="vboxholder" layoutX="378.0" layoutY="282.0" prefHeight="268.0" prefWidth="234.0" spacing="10.0">
         <children>
             <Label fx:id="comboBoxLabel" text="Agency Name" />
             <TextField fx:id="AgencyNameText" />
-            <Label text="Select Agency's Servic Templatee" />
+            <Label text="Select Agency's Servic Template" />
             <CheckBox mnemonicParsing="false" text="Client Profile Bulk" />
             <CheckBox mnemonicParsing="false" text="Employee Service" />
             <CheckBox mnemonicParsing="false" text="Community Connection" />
             <CheckBox mnemonicParsing="false" text="Language Training" />
-            <CheckBox mnemonicParsing="false" text="Information&amp;Orientation" />
+            <CheckBox mnemonicParsing="false" text="Information &amp; Orientation" />
         </children></VBox>
       <ComboBox fx:id="comboBox" layoutX="480.0" layoutY="248.0" onAction="#comboBoxWasUpdate" prefWidth="150.0" />
     <ButtonBar layoutX="686.0" layoutY="490.0" prefHeight="40.0" prefWidth="151.0">

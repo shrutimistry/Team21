@@ -44,12 +44,10 @@ public class AccountCreationController {
    */
   @FXML
   private void submitButtonAction(ActionEvent action) {
-	  /*if (!create.isRunning()) {
+	  // checks status of the user accounts service
+	  if (!create.isRunning()) {
 		  create.restart();
-	    }*/
-	  create = new CreateUserService(AgencyNameText.textProperty(), UserNameText.textProperty(),
-			  PasswordText.textProperty(), EmailText.textProperty(), comboBox.getValue());
-	  create.createUserInstance();
+	  }
 	  
   }
   
@@ -70,7 +68,9 @@ public class AccountCreationController {
     comboBox.getItems().addAll("TEQ", "Agency", "UTSC");
     vboxholder.setVisible(false);
     
-  
+    // creates a new user account service
+    create = new CreateUserService(AgencyNameText.textProperty(), UserNameText.textProperty(),
+			  PasswordText.textProperty(), EmailText.textProperty(), comboBox.getValue());
 
   }
   

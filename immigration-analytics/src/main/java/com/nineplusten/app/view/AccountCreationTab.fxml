@@ -47,7 +47,7 @@
       <ComboBox fx:id="comboBox" layoutX="480.0" layoutY="248.0" onAction="#comboBoxWasUpdate" prefWidth="150.0" />
     <ButtonBar layoutX="686.0" layoutY="490.0" prefHeight="40.0" prefWidth="151.0">
         <buttons>
-        <Button mnemonicParsing="false" onAction="#submitButtonAction" text="Submit" />
+        <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submitButtonAction" text="Submit" />
             <Button mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
         </buttons>
     </ButtonBar>

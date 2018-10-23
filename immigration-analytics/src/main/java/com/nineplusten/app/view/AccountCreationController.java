@@ -1,6 +1,9 @@
 package com.nineplusten.app.view;
+import com.nineplusten.app.service.CreateUserService;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -16,6 +19,9 @@ public class AccountCreationController {
   @FXML private TextField PasswordText;
   @FXML private TextField EmailText;
   @FXML private VBox vboxholder;
+  @FXML private Button submitButton;
+  
+  private CreateUserService create;
   
   public AccountCreationController() {
   }
@@ -38,7 +44,13 @@ public class AccountCreationController {
    */
   @FXML
   private void submitButtonAction(ActionEvent action) {
-    String s = "add action here";
+	  /*if (!create.isRunning()) {
+		  create.restart();
+	    }*/
+	  create = new CreateUserService(AgencyNameText.textProperty(), UserNameText.textProperty(),
+			  PasswordText.textProperty(), EmailText.textProperty(), comboBox.getValue());
+	  create.createUserInstance();
+	  
   }
   
   /**
@@ -57,6 +69,9 @@ public class AccountCreationController {
     // this is for configuring the comboBox
     comboBox.getItems().addAll("TEQ", "Agency", "UTSC");
     vboxholder.setVisible(false);
+    
+  
 
   }
+  
 }

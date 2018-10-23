@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -13,7 +14,7 @@ public class AccountCreationController {
   @FXML private Label comboBoxLabel;
   @FXML private TextField AgencyNameText;
   @FXML private TextField UserNameText;
-  @FXML private TextField PasswordText;
+  @FXML private PasswordField PasswordText;
   @FXML private TextField EmailText;
   @FXML private VBox vboxholder;
   
@@ -56,7 +57,9 @@ public class AccountCreationController {
   private void initialize() {
     // this is for configuring the comboBox
     comboBox.getItems().addAll("TEQ", "Agency", "UTSC");
+    vboxholder.managedProperty().bind(vboxholder.visibleProperty());
     vboxholder.setVisible(false);
+    
 
   }
 }

@@ -12,7 +12,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import java.security.SecureRandom;
 
-public class CreateUserService extends Service<User>{
+public class CreateUserService extends Service<Void>{
 	
 	private StringProperty agencyName;
 	private StringProperty username;
@@ -31,10 +31,10 @@ public class CreateUserService extends Service<User>{
 	}
 
 	@Override
-	protected Task<User> createTask() {
-		return new Task<User>() {
+	protected Task<Void> createTask() {
+		return new Task<Void>() {
 			@Override
-			protected User call() throws Exception {
+			protected Void call() throws Exception {
 				// creates a user in the database
 				createUserInstance();
 				return null;
@@ -60,7 +60,7 @@ public class CreateUserService extends Service<User>{
 		//user.setRole(this.userRole);
 		
 		// generate the encrypted password and identify the user role for the DB
-		byte[] salt = generateSalt();
+		String salt = generateSalt();
 		String dbPassword = makePassword(this.password.get(), salt);
 		String dbRole = identifyRole(this.userRole);
 		
@@ -92,10 +92,10 @@ public class CreateUserService extends Service<User>{
 	 * @param salt is the salt generated to prepend onto the hashed password
 	 * @return the encrypted password
 	 */
-	private String makePassword(String currPassword, byte[] salt) {
+	private String makePassword(String currPassword, String salt) {
 		String password; 
-		password = Hashing.sha256().hashString(currPassword, StandardCharsets.UTF_8).toString();
-		password = salt + password;
+		password = salt + currPassword;
+		password = Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString();
 		return password;
 	}
 	
@@ -104,13 +104,13 @@ public class CreateUserService extends Service<User>{
 	 * 
 	 * @return the salt 
 	 */
-	private byte[] generateSalt() {
+	private String generateSalt() {
 		SecureRandom saltGenerator = new SecureRandom();
 		byte[] salt = new byte[16];
 		saltGenerator.nextBytes(salt);
 		//DEBUGGING
 		System.out.println(salt);
-		return salt;
+		return new String(salt, StandardCharsets.UTF_8);
 	}
 	
 	/**

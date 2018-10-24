@@ -2,7 +2,6 @@ package com.nineplusten.app;
 
 import java.io.IOException;
 import com.nineplusten.app.model.SessionModel;
-import com.nineplusten.app.view.LandingController;
 import com.nineplusten.app.view.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -71,14 +70,12 @@ public class App extends Application {
   public void showLandingView() {
     try {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(App.class.getResource("view/Landing.fxml"));
+      loader.setLocation(App.class.getResource("view/TabPane.fxml"));
       AnchorPane landingView = (AnchorPane) loader.load();
 
       rootLayout.setCenter(landingView);
       
-      LandingController controller = loader.getController();
-      controller.setMainApp(this);
-      
+      // AccountCreationController controller = loader.getController();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -86,9 +83,5 @@ public class App extends Application {
   
   public SessionModel getSession() {
     return session;
-  }
-  
-  public Stage getPrimaryStage() {
-    return primaryStage;
   }
 }

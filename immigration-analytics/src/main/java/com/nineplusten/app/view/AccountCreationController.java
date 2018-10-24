@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -16,7 +17,7 @@ public class AccountCreationController {
   @FXML private Label comboBoxLabel;
   @FXML private TextField AgencyNameText;
   @FXML private TextField UserNameText;
-  @FXML private TextField PasswordText;
+  @FXML private PasswordField PasswordText;
   @FXML private TextField EmailText;
   @FXML private VBox vboxholder;
   @FXML private Button submitButton;
@@ -66,8 +67,9 @@ public class AccountCreationController {
   private void initialize() {
     // this is for configuring the comboBox
     comboBox.getItems().addAll("TEQ", "Agency", "UTSC");
+    vboxholder.managedProperty().bind(vboxholder.visibleProperty());
     vboxholder.setVisible(false);
-    
+
     // creates a new user account service
     create = new CreateUserService(AgencyNameText.textProperty(), UserNameText.textProperty(),
 			  PasswordText.textProperty(), EmailText.textProperty(), comboBox.getValue());

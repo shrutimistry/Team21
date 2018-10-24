@@ -57,7 +57,7 @@ public class CreateUserService extends Service<User>{
 		user.setUserId(this.username.get());
 		user.setUserPw(this.password.get());
 		user.setEmail(this.email.get());
-		user.setRole(this.userRole);
+		//user.setRole(this.userRole);
 		
 		// generate the encrypted password and identify the user role for the DB
 		byte[] salt = generateSalt();

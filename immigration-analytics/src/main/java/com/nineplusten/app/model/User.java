@@ -6,7 +6,6 @@ public class User {
   private String userPw;
   private String salt;
   private String email;
-  private String userRole; 
 
   public String getId() {
     return _id;
@@ -48,12 +47,4 @@ public class User {
     this.email = email;
   }
 
-  public String getRole() {
-	return userRole;
-  }
-  
-  public void setRole(String userRole) {
-	 this.userRole = userRole;
-  }
-  
 }

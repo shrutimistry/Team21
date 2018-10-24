@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -40,6 +41,25 @@ public class LoadExcelService extends Service<List<String>> {
         Sheet dataSheet = excelDoc.getSheet("Data Fields");
         if (dataSheet != null) {
           columnList = parseDataFieldsSheet(dataSheet);
+        } else {
+          Sheet sheet = excelDoc.getSheetAt(0);
+          columnList = parseSingleTemplate(sheet);
+        }
+        return columnList;
+      }
+
+      private List<String> parseSingleTemplate(Sheet sheet) {
+        List<String> columnList = new ArrayList<String>();
+        // Get row 3
+        Row headerRow = sheet.getRow(2);
+        DataFormatter df = new DataFormatter();
+        Iterator<Cell> cellIter = headerRow.cellIterator();
+        while(cellIter.hasNext()) {
+          Cell c = cellIter.next();
+          String cellVal = df.formatCellValue(c);
+          if (!cellVal.trim().equals("")) {
+            columnList.add(cellVal);
+          }
         }
         return columnList;
       }

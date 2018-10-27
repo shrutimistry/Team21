@@ -18,6 +18,11 @@
               <fx:include fx:id="templateCreation" source="TemplateCreationTab.fxml" />
             </content>
           </Tab>
+          <Tab text="User Management">
+            <content>
+              <fx:include fx:id="userManagement" source="UserManagementTab.fxml" />
+            </content>
+          </Tab>
         </tabs>
       </TabPane>
    </children>

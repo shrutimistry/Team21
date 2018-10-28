@@ -43,17 +43,10 @@ public class LoginService extends Service<User> {
     };
   }
 
-  private JSONObject retrieveUserJson() {
+  private JSONObject retrieveUserJson() throws UnirestException {
     JSONArray userResult;
-    try {
-      // Retrieve JSONarray for login user, query by unique id
-      userResult = RestDbIO.get("/users", "user_id", username.get());
-    } catch (UnirestException e) {
-      // Connection failure
-      System.out.println("Failed to reach database:");
-      e.printStackTrace();
-      return null;
-    }
+    // Retrieve JSONarray for login user, query by unique id
+    userResult = RestDbIO.get("/users", "user_id", username.get());
     // Attempt to retrieve single object from JSON array
     // If lookup failed, user == null
     JSONObject user = RestDbIO.singleResultToJSONObject(userResult);

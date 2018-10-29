@@ -5,6 +5,7 @@
 The deliverables for this project are contained within the *Deliverables* directory.
 * **Deliverable 1** - Team Agreement and team member biographies
 * **Deliverable 2** - Product Backlog(includes personas and user stories)
+* **Deliverable 3** - PRoject Planning and Execution
 
 ## Source Code
 

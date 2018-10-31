@@ -75,8 +75,8 @@ public class LoginController {
       @Override
       public void handle(WorkerStateEvent event) {
         // DEBUG
-        //Throwable throwable = ls.getException();
-        //throwable.printStackTrace();
+        Throwable throwable = ls.getException();
+        throwable.printStackTrace();
         mainApp.getSession().invalidateSession();
 
         message.setTextFill(Color.RED);

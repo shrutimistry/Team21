@@ -60,6 +60,7 @@ public class App extends Application {
       rootLayout.setCenter(loadingView);
       LoadingController controller = loader.getController();
       controller.setMainApp(this);
+      controller.startLoading();
     } catch (IOException e) {
       e.printStackTrace();
     }

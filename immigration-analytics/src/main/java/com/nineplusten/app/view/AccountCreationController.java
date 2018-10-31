@@ -1,5 +1,7 @@
 package com.nineplusten.app.view;
 
+import java.util.stream.Collectors;
+import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.service.CreateUserService;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -90,19 +92,23 @@ public class AccountCreationController {
   @FXML
   private void initialize() {
     // this is for configuring the comboBox
-    comboBox.getItems().addAll("TEQ", "Agency", "UTSC");
+    comboBox.getItems().addAll(
+        Cache.userRoles.stream().map(role -> role.getRoleName()).collect(Collectors.toList()));
     vboxholder.managedProperty().bind(vboxholder.visibleProperty());
     vboxholder.setVisible(false);
 
     // creates a new user account service
     create = new CreateUserService(AgencyNameText.textProperty(), UserNameText.textProperty(),
-        PasswordText.textProperty(), EmailText.textProperty(), comboBox.getValue());
+        PasswordText.textProperty(), EmailText.textProperty(), comboBox.valueProperty());
     submitProgress.visibleProperty().bind(create.runningProperty());
     submitButton.visibleProperty().bind(create.runningProperty().not());
     vboxholder.visibleProperty().bind(comboBox.valueProperty().isEqualTo("Agency"));
+    vboxholder.visibleProperty().addListener((src, wasVisible, isVisible) -> {
+      AgencyNameText.clear();
+    });
     configureServiceHandlers();
   }
-  
+
   private void configureServiceHandlers() {
     create.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       @Override
@@ -110,6 +116,14 @@ public class AccountCreationController {
         clearForm();
       }
     });
-    
+    create.setOnFailed(new EventHandler<WorkerStateEvent>() {
+      @Override
+      public void handle(WorkerStateEvent event) {
+        // DEBUG
+        Throwable throwable = create.getException();
+        throwable.printStackTrace();
+      }
+    });
+
   }
 }

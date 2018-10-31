@@ -1,24 +1,14 @@
 package com.nineplusten.app.view;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.nineplusten.app.App;
-import com.nineplusten.app.service.LoadExcelService;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
 import javafx.beans.Observable;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
@@ -26,69 +16,31 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 @SuppressWarnings("restriction")
 public class TemplateCreationController {
 
   // These items are for the combox set up
   @FXML
-  private ComboBox<String> comboBox;
-  @FXML
-  private Label comboBoxLabel;
-  @FXML
-  private TextField AgencyNameText;
-  @FXML
-  private TextField newColName;
-  @FXML
   private TableView<String> templateTable;
+  
   @FXML
-  private Button excelBrowse;
-  @FXML
-  private ProgressIndicator excelLoadIndicator;
-  @FXML
-  private HBox excelEditor;
+  private ChoiceBox<String> templateSelector;
 
   private final String CSS_TRANSPARENT = "-fx-background-color: transparent;";
   private final String CSS_SELECTED = "-fx-background-color: rgba(0, 147, 255, .2);";
 
   private App mainApp;
   private TableColumnHeader selectedHeader = null;
-  private StringProperty excelPath;
-  private LoadExcelService excelService;
 
 
   public TemplateCreationController() {}
 
   @FXML
   private void initialize() {
-    // this is for configuring the comboBox
-    comboBox.getItems().addAll("TEQ", "Agency", "All");
-    comboBoxLabel.setVisible(false);
-    AgencyNameText.setVisible(false);
-
     configureTemplateTable();
-    configureExcelService();
-  }
-
-  /**
-   * This will show text for agency only
-   *
-   */
-  @FXML
-  private void comboBoxWasUpdate() {
-    if (comboBox.getValue().toString() == "Agency") {
-      this.comboBoxLabel.setVisible(true);
-      this.AgencyNameText.setVisible(true);
-    } else {
-      this.comboBoxLabel.setVisible(false);
-      this.AgencyNameText.setVisible(false);
-    }
-
   }
 
   /**
@@ -212,7 +164,7 @@ public class TemplateCreationController {
     templateTable.getColumns().add(c);
   }
 
-  private void createColumns(List<String> columnNames) {
+  /*private void createColumns(List<String> columnNames) {
     List<TableColumn<String, String>> columnList = columnNames.stream()
         .map(name -> new TableColumn<String, String>(name)).collect(Collectors.toList());
     columnList.forEach(col -> {
@@ -222,7 +174,7 @@ public class TemplateCreationController {
     });
     templateTable.getColumns().clear();
     templateTable.getColumns().addAll(columnList);
-  }
+  }*/
 
   @FXML
   private void delColumn(ActionEvent e) {
@@ -236,7 +188,7 @@ public class TemplateCreationController {
     }
   }
 
-  @FXML
+ /* @FXML
   private void loadExcel(ActionEvent e) {
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Select ICARE Template");
@@ -248,13 +200,13 @@ public class TemplateCreationController {
         excelService.restart();
       }
     }
-  }
+  }*/
 
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
   }
 
-  private void configureExcelService() {
+  /*private void configureExcelService() {
     excelPath = new SimpleStringProperty("");
     excelService = new LoadExcelService(excelPath);
     excelService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -273,7 +225,7 @@ public class TemplateCreationController {
     excelLoadIndicator.visibleProperty().bind(excelService.runningProperty());
     excelBrowse.visibleProperty().bind(excelService.runningProperty().not());
     excelEditor.disableProperty().bind(excelService.runningProperty());
-  }
+  }*/
 
   private double getTextWidth(String str) {
     Text text = new Text(str);

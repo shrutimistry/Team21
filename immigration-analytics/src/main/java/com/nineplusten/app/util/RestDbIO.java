@@ -37,7 +37,7 @@ public class RestDbIO {
         .header("x-apikey", API_KEY).header("cache-control", "no-cache").asJson();
     return response;
   }
-  
+
   /**
    * Makes a GET request to restdb.io. Returns the full HTTP response.
    * 
@@ -48,9 +48,11 @@ public class RestDbIO {
    * @return the HTTP response from restdb.io server
    * @throws UnirestException Java lib exception (usually for poorly formed requests)
    */
-  public static HttpResponse<JsonNode> getResponse(String route, String objectId) throws UnirestException {
-    HttpResponse<JsonNode> response = Unirest.get(API_URL + "{route}/{ID}").routeParam("route", route).
-        routeParam("ID", objectId).header("x-apikey", API_KEY).header("cache-control", "no-cache").asJson();
+  public static HttpResponse<JsonNode> getResponse(String route, String objectId)
+      throws UnirestException {
+    HttpResponse<JsonNode> response =
+        Unirest.get(API_URL + "{route}/{ID}").routeParam("route", route).routeParam("ID", objectId)
+            .header("x-apikey", API_KEY).header("cache-control", "no-cache").asJson();
     return response;
   }
 
@@ -118,7 +120,7 @@ public class RestDbIO {
     }
     return result;
   }
-  
+
   /**
    * Makes a GET request to restdb.io. Returns a JSONArray consisting of JSONObjects.
    * 
@@ -220,6 +222,10 @@ public class RestDbIO {
       response = Unirest.post(API_URL + "{route}").routeParam("route", route)
           .header("content-type", "application/json").header("x-apikey", API_KEY)
           .header("cache-control", "no-cache").body((JSONArray) body).asJson();
+    } else if (body instanceof String) {
+      response = Unirest.post(API_URL + "{route}").routeParam("route", route)
+          .header("content-type", "application/json").header("x-apikey", API_KEY)
+          .header("cache-control", "no-cache").body((String) body).asJson();
     } else {
       // requires object wrapper
       response = Unirest.post(API_URL + "{route}").routeParam("route", route)

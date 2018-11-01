@@ -105,11 +105,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>com.example.Main</mainClass>
-					<arguments>
-						<argument>foo</argument>
-						<argument>bar</argument>
-					</arguments>
+					<mainClass>com.nineplusten.app</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

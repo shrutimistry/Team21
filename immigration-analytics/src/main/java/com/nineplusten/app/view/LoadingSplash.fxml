@@ -38,7 +38,7 @@
                   <ProgressIndicator fx:id="loadingIndicator" />
                   <Label fx:id="loadingText" text="Loading...">
                      <font>
-                        <Font name="System Bold Italic" size="16.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
                </children>

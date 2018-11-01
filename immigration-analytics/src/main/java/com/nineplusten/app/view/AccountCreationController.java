@@ -1,14 +1,14 @@
 package com.nineplusten.app.view;
 
-import java.util.stream.Collectors;
 import com.nineplusten.app.cache.Cache;
+import com.nineplusten.app.model.UserRole;
 import com.nineplusten.app.service.CreateUserService;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
@@ -19,7 +19,7 @@ public class AccountCreationController {
 
   // These items are for the combox set up
   @FXML
-  private ComboBox<String> comboBox;
+  private ChoiceBox<UserRole> comboBox;
   @FXML
   private Label comboBoxLabel;
   @FXML
@@ -42,20 +42,6 @@ public class AccountCreationController {
   private CreateUserService create;
 
   public AccountCreationController() {}
-
-  /**
-   * This will show text for agency only
-   *
-   */
-  @FXML
-  private void comboBoxWasUpdate() {
-    if (comboBox.getValue().toString() == "Agency") {
-      vboxholder.setVisible(true);
-    } else {
-      vboxholder.setVisible(false);
-    }
-
-  }
 
   /**
    * this is action call for submit button
@@ -92,8 +78,7 @@ public class AccountCreationController {
   @FXML
   private void initialize() {
     // this is for configuring the comboBox
-    comboBox.getItems().addAll(
-        Cache.userRoles.stream().map(role -> role.getRoleName()).collect(Collectors.toList()));
+    comboBox.getItems().addAll(Cache.userRoles);
     vboxholder.managedProperty().bind(vboxholder.visibleProperty());
     vboxholder.setVisible(false);
 
@@ -102,7 +87,7 @@ public class AccountCreationController {
         PasswordText.textProperty(), EmailText.textProperty(), comboBox.valueProperty());
     submitProgress.visibleProperty().bind(create.runningProperty());
     submitButton.visibleProperty().bind(create.runningProperty().not());
-    vboxholder.visibleProperty().bind(comboBox.valueProperty().isEqualTo("Agency"));
+    vboxholder.visibleProperty().bind(comboBox.valueProperty().asString().isEqualTo("Agency"));
     vboxholder.visibleProperty().addListener((src, wasVisible, isVisible) -> {
       AgencyNameText.clear();
     });

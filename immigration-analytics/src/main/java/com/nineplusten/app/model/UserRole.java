@@ -26,7 +26,7 @@ public class UserRole implements Comparable<UserRole>{
   @Override
   public boolean equals(Object o) {
     if (o instanceof UserRole) {
-      return o.equals(roleName);
+      return ((UserRole) o).getRoleName().equals(roleName);
     }
     return false;
   }
@@ -42,6 +42,6 @@ public class UserRole implements Comparable<UserRole>{
   
   @Override
   public String toString() {
-    return _id;
+    return roleName;
   }
 }

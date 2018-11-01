@@ -1,7 +1,12 @@
 package com.nineplusten.app.view;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import com.nineplusten.app.App;
+import com.nineplusten.app.cache.Cache;
+import com.nineplusten.app.model.Template;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -27,7 +32,7 @@ public class TemplateCreationController {
   private TableView<String> templateTable;
   
   @FXML
-  private ChoiceBox<String> templateSelector;
+  private ChoiceBox<Template> templateSelector;
 
   private final String CSS_TRANSPARENT = "-fx-background-color: transparent;";
   private final String CSS_SELECTED = "-fx-background-color: rgba(0, 147, 255, .2);";
@@ -40,6 +45,7 @@ public class TemplateCreationController {
 
   @FXML
   private void initialize() {
+    templateSelector.getItems().addAll(Cache.templates);
     configureTemplateTable();
   }
 
@@ -140,6 +146,18 @@ public class TemplateCreationController {
     templateTable.skinProperty().addListener(this::installHeaderHandler);
     templateTable.getItems().add("");
     templateTable.setSelectionModel(null);
+    templateSelector.valueProperty().addListener((src, oldVal, newVal) -> {
+      templateTable.getColumns().clear();
+      List<TableColumn<String, String>> columns =
+          newVal.getColumns().values().stream().map(name -> {
+            TableColumn<String, String> t = new TableColumn<>(name);
+            t.setResizable(false);
+            t.setSortable(false);
+            t.setPrefWidth(getTextWidth(name));
+            return t;
+          }).collect(Collectors.toList());
+      templateTable.getColumns().addAll(columns);
+    });
     templateTable.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
       if (e.getCode() == KeyCode.DELETE) {
         delColumn();
@@ -149,6 +167,10 @@ public class TemplateCreationController {
         e.consume();
       }
     });
+    /*templateTable.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+      final TableHeaderRow header = (TableHeaderRow) templateTable.lookup("TableHeaderRow");
+      header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+  });*/
   }
 
   @FXML

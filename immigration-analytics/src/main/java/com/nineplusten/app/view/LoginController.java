@@ -42,7 +42,7 @@ public class LoginController {
   private void initialize() {
     ls = new LoginService(username.textProperty(), password.textProperty(), gson);
     lsRunning.visibleProperty().bind(ls.runningProperty());
-    loginButton.visibleProperty().bind(ls.runningProperty().not());
+    loginButton.disableProperty().bind(ls.runningProperty());
     configureBehaviours();
   }
 

@@ -22,26 +22,22 @@
                   <Insets bottom="20.0" top="20.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="username" promptText="Username...">
+            <TextField fx:id="username" maxWidth="300.0" promptText="Username...">
                <font>
                   <Font size="16.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="password" promptText="Password...">
+            <PasswordField fx:id="password" maxWidth="300.0" promptText="Password...">
                <font>
                   <Font size="16.0" />
                </font>
             </PasswordField>
-            <AnchorPane prefHeight="38.0" prefWidth="300.0">
-               <children>
-                  <Button fx:id="loginButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loginAction" prefHeight="38.0" prefWidth="300.0" text="Sign-in">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Button>
-                  <ProgressIndicator fx:id="lsRunning" layoutX="137.0" layoutY="6.0" prefHeight="26.0" prefWidth="26.0" visible="false" />
-               </children>
-            </AnchorPane>
+            <Button fx:id="loginButton" defaultButton="true" maxWidth="300.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="38.0" prefWidth="300.0" text="Sign-in">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <ProgressIndicator fx:id="lsRunning" prefHeight="26.0" prefWidth="26.0" visible="false" />
             <Label fx:id="message" />
          </children>
          <padding>

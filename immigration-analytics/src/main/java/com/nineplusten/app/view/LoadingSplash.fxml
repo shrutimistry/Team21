@@ -31,19 +31,18 @@
             </Group>
          </children>
       </VBox>
-      <AnchorPane layoutX="221.0" layoutY="596.0" prefHeight="200.0" prefWidth="768.0">
+      <VBox alignment="BOTTOM_CENTER" layoutX="221.0" layoutY="596.0" prefHeight="200.0" prefWidth="768.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox alignment="CENTER" layoutX="-9.990882873535156" layoutY="-9.575239181518555" prefHeight="200.0" prefWidth="768.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <ProgressIndicator fx:id="loadingIndicator" />
-                  <Label fx:id="loadingText" text="Loading...">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-               </children>
-            </VBox>
+            <ProgressIndicator fx:id="loadingIndicator" />
+            <Label fx:id="loadingText" text="Loading...">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
-      </AnchorPane>
+         <padding>
+            <Insets bottom="50.0" />
+         </padding>
+      </VBox>
    </children>
 </AnchorPane>

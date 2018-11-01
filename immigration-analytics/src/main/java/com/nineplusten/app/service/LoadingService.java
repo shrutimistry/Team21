@@ -2,11 +2,10 @@ package com.nineplusten.app.service;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Collections;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nineplusten.app.cache.Cache;
-import com.nineplusten.app.model.Agency;
+import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.UserRole;
 import com.nineplusten.app.util.RestDbIO;
 import javafx.concurrent.Service;
@@ -26,13 +25,9 @@ public class LoadingService extends Service<Void> {
       @Override
       protected Void call() throws Exception {
         Type userRoleType = new TypeToken<Collection<UserRole>>(){}.getType();
-        Type agencyType = new TypeToken<Collection<Agency>>(){}.getType();
+        Type templateType = new TypeToken<Collection<Template>>(){}.getType();
         Cache.userRoles = gson.fromJson(RestDbIO.get("/user-roles").toString(), userRoleType);
-        Cache.agencies = gson.fromJson(RestDbIO.get("/agencies").toString(), agencyType);
-        
-        // Sort for quick access of list elements via binary search
-        Collections.sort(Cache.userRoles);
-        Collections.sort(Cache.agencies);
+        Cache.templates = gson.fromJson(RestDbIO.get("/templates").toString(), templateType);
         
         return null;
       }

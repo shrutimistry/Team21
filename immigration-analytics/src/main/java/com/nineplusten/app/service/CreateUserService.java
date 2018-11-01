@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.User;
 import com.nineplusten.app.model.UserRole;
@@ -20,7 +19,6 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import java.security.SecureRandom;
-import java.util.Collections;
 
 public class CreateUserService extends Service<Void> {
 
@@ -28,11 +26,11 @@ public class CreateUserService extends Service<Void> {
   private StringProperty username;
   private StringProperty password;
   private StringProperty email;
-  private ObjectProperty<String> userRole;
+  private ObjectProperty<UserRole> userRole;
   private Gson gson;
 
   public CreateUserService(StringProperty agencyName, StringProperty username,
-      StringProperty password, StringProperty email, ObjectProperty<String> userRole) {
+      StringProperty password, StringProperty email, ObjectProperty<UserRole> userRole) {
     // initialize class variables
     this.agencyName = agencyName;
     this.username = username;
@@ -72,21 +70,12 @@ public class CreateUserService extends Service<Void> {
     user.setUserId(this.username.get());
     user.setUserPw(dbPassword);
     user.setEmail(this.email.get());
-    int roleIndex = Collections.binarySearch(Cache.userRoles, new UserRole(this.userRole.get()));
-    if (roleIndex != -1) {
-      user.setUserRole(Cache.userRoles.get(roleIndex));
-    }
+    user.setUserRole(this.userRole.get());
     if (agencyName.get() != null && !EqualUtil.isEmpty(agencyName.get())) {
       Agency agency = new Agency(this.agencyName.get());
-      int agencyIndex = Collections.binarySearch(Cache.agencies, agency);
-      if (agencyIndex >= 0) {
-        user.setAgency(Cache.agencies.get(agencyIndex));
-      } else {
-        Agency createdAgency = createNewAgency(agency);
-        if (createdAgency != null) {
-          Cache.agencies.add(-agencyIndex - 1, createdAgency);
-          user.setAgency(createdAgency);
-        }
+      Agency createdAgency = createNewAgency(agency);
+      if (createdAgency != null) {
+        user.setAgency(createdAgency);
       }
     }
 

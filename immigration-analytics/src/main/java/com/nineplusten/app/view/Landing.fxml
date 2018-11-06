@@ -13,12 +13,17 @@
               <fx:include source="AccountCreationTab.fxml" />
             </content>
           </Tab>
-          <Tab text="Template Creation">
+          <Tab text="Template Editor">
             <content>
-              <fx:include fx:id="templateCreation" source="TemplateCreationTab.fxml" />
+              <fx:include fx:id="templateCreation" source="TemplateEditor.fxml" />
             </content>
           </Tab>
-          <Tab text="User Management">
+            <Tab text="Template Browser">
+               <content>
+                  <fx:include fx:id="templateView" source="TemplateViewer.fxml" />
+               </content>
+            </Tab>
+             <Tab text="User Management">
             <content>
               <fx:include fx:id="userManagement" source="UserManagementTab.fxml" />
             </content>

@@ -42,7 +42,7 @@ public class LoginController {
   private void initialize() {
     ls = new LoginService(username.textProperty(), password.textProperty(), gson);
     lsRunning.visibleProperty().bind(ls.runningProperty());
-    loginButton.visibleProperty().bind(ls.runningProperty().not());
+    loginButton.disableProperty().bind(ls.runningProperty());
     configureBehaviours();
   }
 
@@ -74,8 +74,13 @@ public class LoginController {
     ls.setOnFailed(new EventHandler<WorkerStateEvent>() {
       @Override
       public void handle(WorkerStateEvent event) {
+        // DEBUG
         Throwable throwable = ls.getException();
         throwable.printStackTrace();
+        mainApp.getSession().invalidateSession();
+
+        message.setTextFill(Color.RED);
+        message.setText("Failed to connect. Please verify connection.");
       }
     });
   }

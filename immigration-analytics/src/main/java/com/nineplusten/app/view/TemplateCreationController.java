@@ -5,8 +5,7 @@ import java.util.stream.Collectors;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Template;
-import com.sun.javafx.scene.control.skin.TableColumnHeader;
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.nineplusten.app.util.TextUtil;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
@@ -18,19 +17,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-@SuppressWarnings("restriction")
 public class TemplateCreationController {
 
   // These items are for the combox set up
   @FXML
   private TableView<String> templateTable;
-  
+
   @FXML
   private ChoiceBox<Template> templateSelector;
 
@@ -153,7 +151,7 @@ public class TemplateCreationController {
             TableColumn<String, String> t = new TableColumn<>(name);
             t.setResizable(false);
             t.setSortable(false);
-            t.setPrefWidth(getTextWidth(name));
+            t.setPrefWidth(TextUtil.getTextWidth(name));
             return t;
           }).collect(Collectors.toList());
       templateTable.getColumns().addAll(columns);
@@ -167,10 +165,12 @@ public class TemplateCreationController {
         e.consume();
       }
     });
-    /*templateTable.skinProperty().addListener((obs, oldSkin, newSkin) -> {
-      final TableHeaderRow header = (TableHeaderRow) templateTable.lookup("TableHeaderRow");
-      header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
-  });*/
+    /*
+     * templateTable.skinProperty().addListener((obs, oldSkin, newSkin) -> { final TableHeaderRow
+     * header = (TableHeaderRow) templateTable.lookup("TableHeaderRow");
+     * header.reorderingProperty().addListener((o, oldVal, newVal) -> header.setReordering(false));
+     * });
+     */
   }
 
   @FXML
@@ -182,21 +182,17 @@ public class TemplateCreationController {
     TableColumn<String, String> c = new TableColumn<>("new_column");
     c.setSortable(false);
     c.setResizable(false);
-    c.setPrefWidth(getTextWidth(c.getText()));
+    c.setPrefWidth(TextUtil.getTextWidth(c.getText()));
     templateTable.getColumns().add(c);
   }
 
-  /*private void createColumns(List<String> columnNames) {
-    List<TableColumn<String, String>> columnList = columnNames.stream()
-        .map(name -> new TableColumn<String, String>(name)).collect(Collectors.toList());
-    columnList.forEach(col -> {
-      col.setSortable(false);
-      col.setResizable(false);
-      col.setPrefWidth(getTextWidth(col.getText()));
-    });
-    templateTable.getColumns().clear();
-    templateTable.getColumns().addAll(columnList);
-  }*/
+  /*
+   * private void createColumns(List<String> columnNames) { List<TableColumn<String, String>>
+   * columnList = columnNames.stream() .map(name -> new TableColumn<String,
+   * String>(name)).collect(Collectors.toList()); columnList.forEach(col -> {
+   * col.setSortable(false); col.setResizable(false); col.setPrefWidth(getTextWidth(col.getText()));
+   * }); templateTable.getColumns().clear(); templateTable.getColumns().addAll(columnList); }
+   */
 
   @FXML
   private void delColumn(ActionEvent e) {
@@ -210,48 +206,37 @@ public class TemplateCreationController {
     }
   }
 
- /* @FXML
-  private void loadExcel(ActionEvent e) {
-    FileChooser chooser = new FileChooser();
-    chooser.setTitle("Select ICARE Template");
-    chooser.getExtensionFilters().addAll(new ExtensionFilter("Excel Files (.xlsx)", "*.xlsx"));
-    File selectedFile = chooser.showOpenDialog(mainApp.getPrimaryStage());
-    if (selectedFile != null) {
-      excelPath.set(selectedFile.getAbsolutePath());
-      if (!excelService.isRunning()) {
-        excelService.restart();
-      }
-    }
-  }*/
+  /*
+   * @FXML private void loadExcel(ActionEvent e) { FileChooser chooser = new FileChooser();
+   * chooser.setTitle("Select ICARE Template"); chooser.getExtensionFilters().addAll(new
+   * ExtensionFilter("Excel Files (.xlsx)", "*.xlsx")); File selectedFile =
+   * chooser.showOpenDialog(mainApp.getPrimaryStage()); if (selectedFile != null) {
+   * excelPath.set(selectedFile.getAbsolutePath()); if (!excelService.isRunning()) {
+   * excelService.restart(); } } }
+   */
 
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
   }
 
-  /*private void configureExcelService() {
-    excelPath = new SimpleStringProperty("");
-    excelService = new LoadExcelService(excelPath);
-    excelService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-      @Override
-      public void handle(WorkerStateEvent event) {
-        createColumns(excelService.getValue());
-      }
-    });
-    excelService.setOnFailed(new EventHandler<WorkerStateEvent>() {
-      @Override
-      public void handle(WorkerStateEvent event) {
-        Throwable throwable = excelService.getException();
-        throwable.printStackTrace();
-      }
-    });
-    excelLoadIndicator.visibleProperty().bind(excelService.runningProperty());
-    excelBrowse.visibleProperty().bind(excelService.runningProperty().not());
-    excelEditor.disableProperty().bind(excelService.runningProperty());
-  }*/
-
-  private double getTextWidth(String str) {
-    Text text = new Text(str);
-    text.setFont(new Font(16));
-    return text.getLayoutBounds().getWidth() + 2d;
+  @FXML
+  private void save() {
+    System.out.println(templateTable.getColumns().stream().map(col -> col.getText())
+        .collect(Collectors.joining(",")));
   }
+
+  /*
+   * private void configureExcelService() { excelPath = new SimpleStringProperty(""); excelService =
+   * new LoadExcelService(excelPath); excelService.setOnSucceeded(new
+   * EventHandler<WorkerStateEvent>() {
+   * 
+   * @Override public void handle(WorkerStateEvent event) { createColumns(excelService.getValue());
+   * } }); excelService.setOnFailed(new EventHandler<WorkerStateEvent>() {
+   * 
+   * @Override public void handle(WorkerStateEvent event) { Throwable throwable =
+   * excelService.getException(); throwable.printStackTrace(); } });
+   * excelLoadIndicator.visibleProperty().bind(excelService.runningProperty());
+   * excelBrowse.visibleProperty().bind(excelService.runningProperty().not());
+   * excelEditor.disableProperty().bind(excelService.runningProperty()); }
+   */
 }

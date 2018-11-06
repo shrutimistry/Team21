@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Template;
+import com.nineplusten.app.util.TextUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.control.TableColumn;
 
 public class TemplateViewController {
@@ -38,7 +37,7 @@ public class TemplateViewController {
             TableColumn<String, String> t = new TableColumn<>(name);
             t.setResizable(false);
             t.setSortable(false);
-            t.setPrefWidth(getTextWidth(name));
+            t.setPrefWidth(TextUtil.getTextWidth(name));
             return t;
           }).collect(Collectors.toList());
       templateTable.getColumns().addAll(columns);
@@ -46,16 +45,4 @@ public class TemplateViewController {
     templateTable.getItems().add("");
     templateTable.setSelectionModel(null);
   }
-
-
-  private double getTextWidth(String str) {
-    Text text = new Text(str);
-    text.setFont(new Font(16));
-    Double val = text.getLayoutBounds().getWidth() + 2d;
-    if (str.length() <= 5) {
-      val += 5d;
-    }
-    return val;
-  }
-
 }

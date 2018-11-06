@@ -43,11 +43,12 @@ class User {
 
 public class UserManagementController {
 
-  TableView<String> userTable;
+  TableView<User> userTable;
 
   @FXML
   private void initialize() {
-    userTable = new TableView<String>();
+    
+    userTable = new TableView<User>();
   }
 
   public void setMainApp(App mainApp) {

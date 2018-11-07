@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="dataentryVbox" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.DataEntryViewController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
@@ -22,7 +22,7 @@
                </children>
             </HBox>
             <ProgressIndicator layoutX="407.0" layoutY="230.0" progress="0.0" />
-            <Button id="fileupload" fx:id="fileUpload" layoutX="32.0" layoutY="163.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="102.0" text="Choose a file..." />
+            <Button id="fileupload" fx:id="fileUpload" layoutX="32.0" layoutY="163.0" mnemonicParsing="false" onAction="#handlefileUpload" prefHeight="25.0" prefWidth="102.0" text="Choose a file..." />
       </children>
     </AnchorPane>
   </children>

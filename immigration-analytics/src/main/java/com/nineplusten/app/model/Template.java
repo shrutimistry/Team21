@@ -9,6 +9,10 @@ public class Template implements Comparable<Template> {
   // Map column_id to column_name
   private Map<String, String> columns;
   
+  public Template(String templateName) {
+    this.templateName = templateName;
+  }
+  
   public Template(String _id, String templateName, Map<String, String> columns) {
     this._id = _id;
     this.templateName = templateName;
@@ -34,17 +38,10 @@ public class Template implements Comparable<Template> {
     this.columns = columns;
   }
   
-  public boolean contentEquals(Object o) {
-    if (o instanceof Template) {
-      return this.columns.equals(((Template) o).getColumns());
-    }
-    return false;
-  }
-  
   @Override
   public boolean equals(Object o) {
     if (o instanceof Template) {
-      return this.templateName.equals(((Template) o).getTemplateName());
+      return ((Template) o).getTemplateName().equalsIgnoreCase(templateName);
     }
     return false;
   }

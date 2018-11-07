@@ -37,7 +37,7 @@ public class DataEntryViewController {
 	  private App mainApp;
 	  final FileChooser fileChooser = new FileChooser();
 	  private Button fileupload;
-	  private AnchorPane dataentryPane;
+	  private VBox dataentryVbox;
 	 @FXML
 	  private void initialize() {
 	    templateSelector.getItems().addAll(Cache.templates);
@@ -51,7 +51,7 @@ public class DataEntryViewController {
 	                @Override
 	                public void handle(final ActionEvent e) {
 	                	
-						File file = fileChooser.showOpenDialog(dataentryPane.getScene().getWindow());
+						File file = fileChooser.showOpenDialog(dataentryVbox.getScene().getWindow());
 	                    if (file != null) {
 	                        openFile(file);
 	                    }

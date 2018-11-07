@@ -6,6 +6,7 @@ import java.util.Objects;
 public class Template implements Comparable<Template> {
   private String _id;
   private String templateName;
+  // Map column_id to column_name
   private Map<String, String> columns;
   
   public Template(String _id, String templateName, Map<String, String> columns) {
@@ -33,6 +34,13 @@ public class Template implements Comparable<Template> {
     this.columns = columns;
   }
   
+  public boolean contentEquals(Object o) {
+    if (o instanceof Template) {
+      return this.columns.equals(((Template) o).getColumns());
+    }
+    return false;
+  }
+  
   @Override
   public boolean equals(Object o) {
     if (o instanceof Template) {
@@ -55,4 +63,5 @@ public class Template implements Comparable<Template> {
   public String toString() {
     return templateName;
   }
+  
 }

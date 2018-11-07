@@ -1,26 +1,43 @@
 package com.nineplusten.app.view;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Template;
+import com.nineplusten.app.model.TemplateEditorModel;
+import com.nineplusten.app.serializer.TemplateSerializer;
+import com.nineplusten.app.util.RestDbIO;
+import com.nineplusten.app.util.StringUtil;
 import com.nineplusten.app.util.TextUtil;
 import javafx.beans.Observable;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class TemplateCreationController {
@@ -32,38 +49,39 @@ public class TemplateCreationController {
   @FXML
   private ChoiceBox<Template> templateSelector;
 
+  @FXML
+  private VBox templateSideControls;
+
+  @FXML
+  private ButtonBar templateMainControls;
+
   private final String CSS_TRANSPARENT = "-fx-background-color: transparent;";
   private final String CSS_SELECTED = "-fx-background-color: rgba(0, 147, 255, .2);";
+  private final String NEW_COLUMN_TEXT = "New Column";
 
+  @SuppressWarnings("unused")
   private App mainApp;
-  private TableColumnHeader selectedHeader = null;
-
+  private TemplateEditorModel editor;
+  private Gson gson;
 
   public TemplateCreationController() {}
 
   @FXML
   private void initialize() {
+    gson = new GsonBuilder().registerTypeAdapter(Template.class, new TemplateSerializer()).create();
+    editor = new TemplateEditorModel();
     templateSelector.getItems().addAll(Cache.templates);
     configureTemplateTable();
+    templateSideControls.disableProperty().bind(templateSelector.valueProperty().isNull());
+    templateMainControls.disableProperty().bind(editor.modifiedProperty().not());
+    templateTable.getColumns()
+        .addListener((ListChangeListener<? super TableColumn<String, ?>>) (c) -> {
+          if (!editor.isModified()) {
+            editor.setModified(true);
+          }
+        });
   }
 
-  /**
-   * this is action call for submit button
-   * 
-   * @param action
-   */
-  @FXML
-  private void submitButtonAction(ActionEvent action) {
-    // add action here
-  }
-
-  /**
-   * this is action call for cancel button
-   */
-  @FXML
-  private void cancelButtonAction(ActionEvent action) {
-    // add action here
-  }
 
   // This is a VERY hacky method of implementing column header editing and selection
   // There is NO built-in way of modifying or selecting the table header
@@ -81,13 +99,13 @@ public class TemplateCreationController {
           if (target instanceof TableColumnHeader) {
             TableColumnHeader tch = (TableColumnHeader) target;
             if (!templateTable.getColumns().contains(tch)) {
-              if (selectedHeader != null) {
-                selectedHeader.setStyle(CSS_TRANSPARENT);
-                selectedHeader = tch;
-                selectedHeader.setStyle(CSS_SELECTED);
+              if (editor.getSelectedHeader() != null) {
+                editor.getSelectedHeader().setStyle(CSS_TRANSPARENT);
+                editor.setSelectedHeader(tch);
+                editor.getSelectedHeader().setStyle(CSS_SELECTED);
               } else {
-                selectedHeader = tch;
-                selectedHeader.setStyle(CSS_SELECTED);
+                editor.setSelectedHeader(tch);
+                editor.getSelectedHeader().setStyle(CSS_SELECTED);
               }
               break;
             }
@@ -107,6 +125,7 @@ public class TemplateCreationController {
         }
         if (column != null) {
           TableColumnBase<?, ?> tableColumn = column;
+          final String oldVal = column.getText();
           TextField textField = new TextField(column.getText());
           textField.setPrefWidth(column.getWidth());
           textField.textProperty().addListener((ov, prevText, currText) -> {
@@ -122,12 +141,24 @@ public class TemplateCreationController {
             tableColumn.setText(textField.getText());
             tableColumn.setGraphic(null);
             tableColumn.setPrefWidth(textField.getWidth());
+            if (!oldVal.equals(textField.getText())) {
+              if (!editor.isModified()) {
+                editor.setModified(true);
+              }
+              editor.putColumnId(tableColumn, StringUtil.toSnakeCase(textField.getText()));
+            }
           });
           textField.focusedProperty().addListener((src, ov, nv) -> {
             if (!nv) {
               tableColumn.setText(textField.getText());
               tableColumn.setGraphic(null);
               tableColumn.setPrefWidth(textField.getWidth());
+              if (!oldVal.equals(textField.getText())) {
+                if (!editor.isModified()) {
+                  editor.setModified(true);
+                }
+                editor.putColumnId(tableColumn, StringUtil.toSnakeCase(textField.getText()));
+              }
             }
           });
           column.setText(" ");
@@ -145,24 +176,33 @@ public class TemplateCreationController {
     templateTable.getItems().add("");
     templateTable.setSelectionModel(null);
     templateSelector.valueProperty().addListener((src, oldVal, newVal) -> {
+      // Clear all existing data related to columns
       templateTable.getColumns().clear();
+      editor.columnIdMapProperty().clear();
+
       List<TableColumn<String, String>> columns =
-          newVal.getColumns().values().stream().map(name -> {
-            TableColumn<String, String> t = new TableColumn<>(name);
+          newVal.getColumns().entrySet().stream().map(entry -> {
+            TableColumn<String, String> t = new TableColumn<>(entry.getValue());
             t.setResizable(false);
             t.setSortable(false);
-            t.setPrefWidth(TextUtil.getTextWidth(name));
+            t.setPrefWidth(TextUtil.getTextWidth(entry.getValue()));
+            // Map physical column to column id
+            editor.columnIdMapProperty().put(t, entry.getKey());
             return t;
           }).collect(Collectors.toList());
       templateTable.getColumns().addAll(columns);
+      editor.setModified(false);
+      editor.setReferenceTemplate(newVal);
     });
     templateTable.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-      if (e.getCode() == KeyCode.DELETE) {
-        delColumn();
-        e.consume();
-      } else if (e.getCode() == KeyCode.INSERT) {
-        addColumn();
-        e.consume();
+      if (templateSelector.getValue() != null) {
+        if (e.getCode() == KeyCode.DELETE) {
+          delColumn();
+          e.consume();
+        } else if (e.getCode() == KeyCode.INSERT) {
+          addColumn();
+          e.consume();
+        }
       }
     });
     /*
@@ -179,10 +219,12 @@ public class TemplateCreationController {
   }
 
   private void addColumn() {
-    TableColumn<String, String> c = new TableColumn<>("new_column");
+
+    TableColumn<String, String> c = new TableColumn<>(NEW_COLUMN_TEXT);
     c.setSortable(false);
     c.setResizable(false);
     c.setPrefWidth(TextUtil.getTextWidth(c.getText()));
+    editor.putColumnId(c, StringUtil.toSnakeCase(NEW_COLUMN_TEXT));
     templateTable.getColumns().add(c);
   }
 
@@ -200,9 +242,11 @@ public class TemplateCreationController {
   }
 
   private void delColumn() {
-    if (selectedHeader != null) {
-      templateTable.getColumns().remove(selectedHeader.getTableColumn());
-      selectedHeader = null;
+    if (editor.getSelectedHeader() != null) {
+      TableColumnBase<?, ?> c = editor.getSelectedHeader().getTableColumn();
+      editor.columnIdMapProperty().remove(c);
+      templateTable.getColumns().remove(c);
+      editor.setSelectedHeader(null);
     }
   }
 
@@ -221,8 +265,49 @@ public class TemplateCreationController {
 
   @FXML
   private void save() {
-    System.out.println(templateTable.getColumns().stream().map(col -> col.getText())
-        .collect(Collectors.joining(",")));
+    Alert alert = new Alert(AlertType.CONFIRMATION);
+    alert.setTitle("Save Confirmation");
+    alert.setHeaderText(
+        "Save changes to \"" + templateSelector.getValue().getTemplateName() + "\"?");
+    alert.setContentText(
+        "This will override the existing template. Agencies will be able to view changes to this template immediately.");
+    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.get() == ButtonType.OK) {
+      Map<String, String> columns = new LinkedHashMap<>();
+      templateTable.getColumns().stream().forEach(col -> {
+        columns.put(editor.getColumnId(col), col.getText());
+      });
+      Template t = templateSelector.getValue();
+      t.setColumns(columns);
+      try {
+        RestDbIO.put("/templates", t.get_id(), gson.toJson(t));
+      } catch (UnirestException e) {
+        e.printStackTrace();
+      }
+      editor.setReferenceTemplate(t);
+      editor.setModified(false);
+    }
+
+  }
+
+  @FXML
+  private void discardChanges() {
+    editor.columnIdMapProperty().clear();
+    templateTable.getColumns().clear();
+    List<TableColumn<String, String>> columns =
+        editor.getReferenceTemplate().getColumns().entrySet().stream().map(entry -> {
+          TableColumn<String, String> t = new TableColumn<>(entry.getValue());
+          t.setResizable(false);
+          t.setSortable(false);
+          t.setPrefWidth(TextUtil.getTextWidth(entry.getValue()));
+          // Map physical column to column id
+          editor.columnIdMapProperty().put(t, entry.getKey());
+          return t;
+        }).collect(Collectors.toList());
+    templateTable.getColumns().addAll(columns);
+    editor.setModified(false);
   }
 
   /*

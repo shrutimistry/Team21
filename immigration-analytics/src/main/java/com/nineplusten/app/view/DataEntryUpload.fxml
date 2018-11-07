@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Label alignment="CENTER" layoutX="344.0" layoutY="40.0" style="&#10;" text="Data Entry" textAlignment="CENTER" wrapText="false">
+          <font>
+            <Font size="40.0" />
+          </font>
+        </Label>
+            <HBox layoutX="35.0" layoutY="98.0" prefHeight="27.0" prefWidth="1000.0" spacing="10.0">
+               <children>
+                  <ChoiceBox fx:id="templateSelector1" prefHeight="26.0" prefWidth="300.0" />
+               </children>
+            </HBox>
+            <ProgressIndicator layoutX="407.0" layoutY="230.0" progress="0.0" />
+            <Button layoutX="32.0" layoutY="163.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="102.0" text="Upload" />
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>

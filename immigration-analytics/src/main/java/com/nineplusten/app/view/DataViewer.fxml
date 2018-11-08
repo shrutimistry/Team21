@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -41,10 +42,10 @@
                         <Label text="Select agency:" />
                         <ChoiceBox fx:id="agencySelector" prefWidth="300.0" GridPane.columnIndex="1" />
                         <ChoiceBox fx:id="templateSelector" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Select template:" GridPane.rowIndex="1" />
+                        <Label fx:id="selectTemplateText" text="Select template:" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <VBox alignment="TOP_CENTER" spacing="10.0">
+                  <VBox fx:id="dataContainer" alignment="TOP_CENTER" spacing="10.0">
                      <VBox.margin>
                         <Insets bottom="50.0" top="50.0" />
                      </VBox.margin>
@@ -55,10 +56,19 @@
                            </font>
                         </Label>
                         <Label fx:id="agencyNameText" text="Agency Name" />
-                        <TableView fx:id="dataTable" prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <VBox.margin>
                               <Insets bottom="10.0" top="10.0" />
-                           </VBox.margin></TableView>
+                           </VBox.margin>
+                           <children>
+                              <TableView fx:id="dataTable" prefHeight="200.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <VBox alignment="CENTER" layoutX="473.52618408203125" layoutY="77.25653839111328" mouseTransparent="true" prefHeight="200.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <ProgressIndicator fx:id="dataServiceProgressIndicator" visible="false" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
                      </children>
                      <padding>
                         <Insets bottom="20.0" top="20.0" />

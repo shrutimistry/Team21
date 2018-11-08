@@ -42,6 +42,6 @@ public class Agency implements Comparable<Agency>{
   
   @Override
   public String toString() {
-    return _id;
+    return this.agencyName;
   }
 }

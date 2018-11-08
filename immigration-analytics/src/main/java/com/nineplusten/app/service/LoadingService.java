@@ -5,6 +5,8 @@ import java.util.Collection;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nineplusten.app.cache.Cache;
+import com.nineplusten.app.constant.Routes;
+import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.UserRole;
 import com.nineplusten.app.util.RestDbIO;
@@ -26,8 +28,10 @@ public class LoadingService extends Service<Void> {
       protected Void call() throws Exception {
         Type userRoleType = new TypeToken<Collection<UserRole>>(){}.getType();
         Type templateType = new TypeToken<Collection<Template>>(){}.getType();
-        Cache.userRoles = gson.fromJson(RestDbIO.get("/user-roles").toString(), userRoleType);
-        Cache.templates = gson.fromJson(RestDbIO.get("/templates").toString(), templateType);
+        Type agencyType = new TypeToken<Collection<Agency>>(){}.getType();
+        Cache.userRoles = gson.fromJson(RestDbIO.get(Routes.USER_ROLES).toString(), userRoleType);
+        Cache.templates = gson.fromJson(RestDbIO.get(Routes.TEMPLATES).toString(), templateType);
+        Cache.agencies = gson.fromJson(RestDbIO.get(Routes.AGENCIES).toString(), agencyType);
         
         return null;
       }

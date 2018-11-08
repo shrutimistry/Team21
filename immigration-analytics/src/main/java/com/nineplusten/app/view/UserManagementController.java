@@ -59,7 +59,19 @@ public class UserManagementController {
 
   @FXML
   private void initialize() {
-    
+
+    userTable = new TableView<User>();
+
+    TableColumn<User, String> userIDColumn = new TableColumn<>("User ID");
+    TableColumn<User, String> emailColumn = new TableColumn<>("Email");
+    TableColumn<User, String> roleColumn = new TableColumn<>("Role");
+
+    userIDColumn.setCellValueFactory(new PropertyValueFactory("userID"));
+    emailColumn.setCellValueFactory(new PropertyValueFactory("email"));
+    roleColumn.setCellValueFactory(new PropertyValueFactory("role"));
+
+    userTable.getColumns().setAll(userIDColumn, emailColumn, roleColumn);
+
     userService = new LoadUserService();
     userService.start();
     userService.setOnSucceeded(new EventHandler<WorkerStateEvent>(){
@@ -100,19 +112,15 @@ public class UserManagementController {
   }
 
   private void initializeTable(){
-    userTable = new TableView<User>();
 
-    userTable.setItems(parseUsers());
+    ObservableList<User> users = parseUsers();
 
-    TableColumn<User, String> userIDColumn = new TableColumn<>("User ID");
-    TableColumn<User, String> emailColumn = new TableColumn<>("Email");
-    TableColumn<User, String> roleColumn = new TableColumn<>("Role");
-
-    userIDColumn.setCellValueFactory(new PropertyValueFactory("userID"));
-    emailColumn.setCellValueFactory(new PropertyValueFactory("email"));
-    roleColumn.setCellValueFactory(new PropertyValueFactory("role"));
-
-    userTable.getColumns().setAll(userIDColumn, emailColumn, roleColumn);
+    for (int i = 0; i < users.size(); i++){
+        System.out.print(users.get(i).userIDProperty() + " ");
+        System.out.print(users.get(i).emailProperty() + " ");
+        System.out.println(users.get(i).roleProperty());
+    }
+    userTable.getItems().addAll(parseUsers());
   }
 
 }

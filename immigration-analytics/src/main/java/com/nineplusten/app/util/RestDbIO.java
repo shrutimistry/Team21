@@ -286,7 +286,12 @@ public class RestDbIO {
           .routeParam("ID", objectId).header("content-type", "application/json")
           .header("x-apikey", API_KEY).header("cache-control", "no-cache").body((JSONArray) body)
           .asJson();
-    } else {
+    } else if (body instanceof String) {
+      response = Unirest.put(API_URL + "{route}/{ID}").routeParam("route", route)
+          .routeParam("ID", objectId).header("content-type", "application/json")
+          .header("x-apikey", API_KEY).header("cache-control", "no-cache").body((String) body)
+          .asJson();
+    }else {
       // requires object wrapper
       response = Unirest.put(API_URL + "{route}/{ID}").routeParam("route", route)
           .routeParam("ID", objectId).header("content-type", "application/json")

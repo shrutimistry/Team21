@@ -68,6 +68,7 @@ public class TemplateDataRetrievalService extends Service<ObservableList<Templat
     templateSubQuery.put("_id", template.get_id());
     agencySubQuery.put("_id", agency.get_id());
     jsQuery.put("template", templateSubQuery);
+    jsQuery.put("agency", agencySubQuery);
     return jsQuery;
   }
 

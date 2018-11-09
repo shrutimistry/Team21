@@ -81,7 +81,9 @@ public class DataViewController {
       templateSelector.getSelectionModel().clearSelection();
     });
     templateSelector.valueProperty().addListener((src, oldVal, newVal) -> {
-      dataService.restart();
+      if (newVal != null) {
+        dataService.restart();
+      }
     });
     
   }

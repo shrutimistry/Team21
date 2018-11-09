@@ -90,6 +90,7 @@ public class App extends Application {
       
       LandingController controller = loader.getController();
       controller.setMainApp(this);
+      controller.configureUserView();
       
     } catch (IOException e) {
       e.printStackTrace();

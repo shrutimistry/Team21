@@ -14,7 +14,7 @@ The source code is contained within the *immigration-analytics* directory. Maven
 ### Requirements
 
 * Maven
-* <a href='https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html'>Java JDK 8</a>
+* <a href='https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase10-4425482.html'>Java JDK 10</a>
 
 ### Running the Application
 

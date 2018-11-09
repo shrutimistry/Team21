@@ -28,7 +28,7 @@ public class TemplateDataRetrievalService extends Service<ObservableList<Templat
   public TemplateDataRetrievalService(ReadOnlyObjectProperty<Agency> agency,
       ReadOnlyObjectProperty<Template> template) {
     gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .create();
+        .excludeFieldsWithoutExposeAnnotation().create();
     this.agency = agency;
     this.template = template;
   }

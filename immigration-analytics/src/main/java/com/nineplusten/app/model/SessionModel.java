@@ -18,6 +18,14 @@ public class SessionModel {
     return sessionUser;
   }
   
+  public User getUser() {
+    return sessionUser.get();
+  }
+  
+  public void setUser(User user) {
+    sessionUser.set(user);
+  }
+  
   public void invalidateSession() {
     sessionUser.setValue(null);;
   }

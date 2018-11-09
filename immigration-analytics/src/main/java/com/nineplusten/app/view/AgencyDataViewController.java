@@ -6,8 +6,11 @@ import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
+import com.nineplusten.app.model.User;
 import com.nineplusten.app.service.TemplateDataRetrievalService;
 import com.nineplusten.app.util.TextUtil;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -19,46 +22,41 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 
-public class DataViewController {
+public class AgencyDataViewController {
   @FXML
   private TableView<TemplateData> dataTable;
   @FXML
-  private ChoiceBox<Agency> agencySelector;
-  @FXML
   private ChoiceBox<Template> templateSelector;
   @FXML
-  private Label agencyNameText;
-  @FXML
   private Label templateNameText;
-  @FXML
-  private Label selectTemplateText;
   @FXML
   private VBox dataContainer;
   @FXML
   private ProgressIndicator dataServiceProgressIndicator;
 
   private TemplateDataRetrievalService dataService;
+  private ObjectProperty<Agency> agency;
 
   @FXML
   private void initialize() {
-    agencySelector.getItems().addAll(Cache.agencies);
     templateSelector.getItems().addAll(Cache.templates);
     dataTable.setPlaceholder(new Label("No data found for this template."));
-    dataService = new TemplateDataRetrievalService(agencySelector.valueProperty(),
-        templateSelector.valueProperty());
+    
     configureBindings();
+  }
+  
+  public void initDataService(User user) {
+    agency = new SimpleObjectProperty<>(user.getAgency());
+    dataService = new TemplateDataRetrievalService(agency,
+        templateSelector.valueProperty());
+    dataTable.disableProperty().bind(dataService.runningProperty());
+    dataServiceProgressIndicator.visibleProperty().bind(dataService.runningProperty());
     configureListeners();
   }
 
   private void configureBindings() {
-    selectTemplateText.visibleProperty().bind(agencySelector.valueProperty().isNotNull());
-    templateSelector.visibleProperty().bind(agencySelector.valueProperty().isNotNull());
-    agencyNameText.textProperty().bind(agencySelector.valueProperty().asString());
     templateNameText.textProperty().bind(templateSelector.valueProperty().asString());
-    dataContainer.visibleProperty().bind(agencySelector.valueProperty().isNotNull()
-        .and(templateSelector.valueProperty().isNotNull()));
-    dataTable.disableProperty().bind(dataService.runningProperty());
-    dataServiceProgressIndicator.visibleProperty().bind(dataService.runningProperty());
+    dataContainer.visibleProperty().bind(templateSelector.valueProperty().isNotNull());
   }
 
   private void configureListeners() {
@@ -77,13 +75,8 @@ public class DataViewController {
         throwable.printStackTrace();
       }
     });
-    agencySelector.valueProperty().addListener((src, oldVal, newVal) -> {
-      templateSelector.getSelectionModel().clearSelection();
-    });
     templateSelector.valueProperty().addListener((src, oldVal, newVal) -> {
-      if (newVal != null) {
-        dataService.restart();
-      }
+      dataService.restart();
     });
     
   }

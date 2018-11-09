@@ -47,6 +47,9 @@ public class LandingController {
       });
     });
     tabBar.getTabs().retainAll(userTabs);
+
+    agencyDataViewController.initDataService(mainApp.getSession().getUser());
   }
+
 
 }

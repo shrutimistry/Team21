@@ -69,7 +69,7 @@ public class CreateUserService extends Service<Void> {
     String dbPassword = makePassword(this.password.get(), salt);
 
     User user = new User();
-    user.setUserId(this.username.get());
+    user.setUserId(this.username.get().toLowerCase());
     user.setUserPw(dbPassword);
     user.setEmail(this.email.get());
     user.setUserRole(this.userRole.get());

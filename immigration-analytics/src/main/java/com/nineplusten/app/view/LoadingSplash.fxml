@@ -34,7 +34,7 @@
       <VBox alignment="BOTTOM_CENTER" layoutX="221.0" layoutY="596.0" prefHeight="200.0" prefWidth="768.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ProgressIndicator fx:id="loadingIndicator" />
-            <Label fx:id="loadingText" text="Loading...">
+            <Label fx:id="loadingText" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Loading...">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

@@ -16,17 +16,17 @@ public class Agency implements Comparable<Agency>{
   public void set_id(String _id) {
     this._id = _id;
   }
-  public String getRoleName() {
+  public String getAgencyName() {
     return agencyName;
   }
-  public void setRoleName(String agencyName) {
+  public void setAgencyName(String agencyName) {
     this.agencyName = agencyName;
   }
   
   @Override
   public boolean equals(Object o) {
-    if (o instanceof UserRole) {
-      return o.equals(agencyName);
+    if (o instanceof Agency) {
+      return ((Agency) o).getAgencyName().equalsIgnoreCase(agencyName);
     }
     return false;
   }
@@ -42,6 +42,6 @@ public class Agency implements Comparable<Agency>{
   
   @Override
   public String toString() {
-    return _id;
+    return this.agencyName;
   }
 }

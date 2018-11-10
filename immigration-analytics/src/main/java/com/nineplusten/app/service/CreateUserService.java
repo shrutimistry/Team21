@@ -9,6 +9,8 @@ import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.nineplusten.app.cache.Cache;
+import com.nineplusten.app.constant.Routes;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.User;
 import com.nineplusten.app.model.UserRole;
@@ -76,6 +78,7 @@ public class CreateUserService extends Service<Void> {
       Agency createdAgency = createNewAgency(agency);
       if (createdAgency != null) {
         user.setAgency(createdAgency);
+        Cache.agencies.add(createdAgency);
       }
     }
 
@@ -85,7 +88,7 @@ public class CreateUserService extends Service<Void> {
 
     // post the JSON object into the database
     try {
-      result = RestDbIO.post("/users", user_obj);
+      result = RestDbIO.post(Routes.USERS, user_obj);
     } catch (UnirestException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -128,7 +131,7 @@ public class CreateUserService extends Service<Void> {
     Agency created;
     String agencyJson = gson.toJson(agency);
     try {
-      HttpResponse<JsonNode> response = RestDbIO.postResponse("/agencies", agencyJson);
+      HttpResponse<JsonNode> response = RestDbIO.postResponse(Routes.AGENCIES, agencyJson);
       created = gson.fromJson(response.getBody().toString(), Agency.class);
     } catch (UnirestException e) {
       e.printStackTrace();

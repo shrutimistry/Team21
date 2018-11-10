@@ -14,7 +14,7 @@ The source code is contained within the *immigration-analytics* directory. Maven
 ### Requirements
 
 * Maven
-* <a href='https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html'>Java JDK 8</a>
+* <a href='https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase10-4425482.html'>Java JDK 10</a>
 
 ### Running the Application
 
@@ -24,6 +24,13 @@ First, compile the code with:
 
 `mvn compile`
 
-Then, you can run the application with the following commands:
-* On Linux/Mac: `mvn exec:java -Dexec.mainClass="com.nineplusten.app.App"`
-* On Windows: `mvn exec:java -D"exec.mainClass"="com.nineplusten.app.App"`
+Then, you can run the application directly (without packaging) with the following commands:
+* On Linux/Mac: `mvn exec:java`
+* On Windows: `mvn exec:java`
+
+To package and install the application, run:
+
+`mvn package`
+
+Then, you can run the packaged version with the following command (replacing &lt;version&gt; with the application version):
+`java -cp "target/immigration-analytics-<version>-SNAPSHOT-jar-with-dependencies.jar" "com.nineplusten.app.App"`

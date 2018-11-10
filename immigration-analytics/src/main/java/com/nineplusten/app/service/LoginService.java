@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.nineplusten.app.constant.Routes;
 import com.nineplusten.app.model.User;
 import com.nineplusten.app.util.RestDbIO;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -46,7 +47,7 @@ public class LoginService extends Service<User> {
   private JSONObject retrieveUserJson() throws UnirestException {
     JSONArray userResult;
     // Retrieve JSONarray for login user, query by unique id
-    userResult = RestDbIO.get("/users", "user_id", username.get());
+    userResult = RestDbIO.get(Routes.USERS, "user_id", username.get());
     // Attempt to retrieve single object from JSON array
     // If lookup failed, user == null
     JSONObject user = RestDbIO.singleResultToJSONObject(userResult);

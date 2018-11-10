@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
+import com.nineplusten.app.constant.Routes;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateEditorModel;
 import com.nineplusten.app.serializer.TemplateSerializer;
@@ -282,7 +283,7 @@ public class TemplateCreationController {
       Template t = templateSelector.getValue();
       t.setColumns(columns);
       try {
-        RestDbIO.put("/templates", t.get_id(), gson.toJson(t));
+        RestDbIO.put(Routes.TEMPLATES, t.get_id(), gson.toJson(t));
       } catch (UnirestException e) {
         e.printStackTrace();
       }

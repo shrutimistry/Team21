@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.LandingController">
    <children>
-      <TabPane layoutX="14.0" layoutY="14.0" prefHeight="278.0" prefWidth="698.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="tabBar" layoutX="14.0" layoutY="14.0" prefHeight="278.0" prefWidth="698.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Account Creation">
             <content>
@@ -28,6 +28,16 @@
               <fx:include fx:id="userManagement" source="UserManagementTab.fxml" />
             </content>
           </Tab>
+            <Tab text="Data Browser">
+               <content>
+                  <fx:include fx:id="dataView" source="DataViewer.fxml" />
+               </content>
+            </Tab>
+            <Tab text="My Data">
+               <content>
+                  <fx:include fx:id="agencyDataView" source="AgencyDataViewer.fxml" />
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

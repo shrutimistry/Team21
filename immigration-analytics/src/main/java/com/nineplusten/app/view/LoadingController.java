@@ -27,6 +27,7 @@ public class LoadingController {
         new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapter(Template.class, new TemplateDeserializer()).create());
     loadingText.visibleProperty().bind(loadingService.runningProperty());
+    loadingText.textProperty().bind(loadingService.messageProperty());
     loadingIndicator.visibleProperty().bind(loadingService.runningProperty());
   }
 

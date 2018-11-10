@@ -57,6 +57,8 @@ public class UserManagementController {
   TableView<User> userTable;
   LoadUserService userService;
 
+  private App mainApp;
+
   @FXML
   private void initialize() {
 
@@ -84,6 +86,7 @@ public class UserManagementController {
   }
 
   public void setMainApp(App mainApp) {
+    this.mainApp = mainApp;
   }
 
   private ObservableList<User> parseUsers(){
@@ -112,14 +115,6 @@ public class UserManagementController {
   }
 
   private void initializeTable(){
-
-    ObservableList<User> users = parseUsers();
-
-    for (int i = 0; i < users.size(); i++){
-        System.out.print(users.get(i).userIDProperty() + " ");
-        System.out.print(users.get(i).emailProperty() + " ");
-        System.out.println(users.get(i).roleProperty());
-    }
     userTable.getItems().addAll(parseUsers());
   }
 

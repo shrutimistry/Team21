@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 public class LandingController {
   @FXML
   private TemplateCreationController templateCreationController;
+  @FXML
+  private UserManagementController UserManagementController;
   
   @FXML
   private void initialize() {
@@ -13,6 +15,8 @@ public class LandingController {
   
   public void setMainApp(App mainApp) {
     templateCreationController.setMainApp(mainApp);
+    UserManagementController.setMainApp(mainApp);
+
   }
   
   

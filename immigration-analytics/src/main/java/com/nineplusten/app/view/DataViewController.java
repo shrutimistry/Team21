@@ -51,8 +51,7 @@ public class DataViewController {
   }
 
   private void configureBindings() {
-    selectTemplateText.visibleProperty().bind(agencySelector.valueProperty().isNotNull());
-    templateSelector.visibleProperty().bind(agencySelector.valueProperty().isNotNull());
+    templateSelector.disableProperty().bind(agencySelector.valueProperty().isNull());
     agencyNameText.textProperty().bind(agencySelector.valueProperty().asString());
     templateNameText.textProperty().bind(templateSelector.valueProperty().asString());
     dataContainer.visibleProperty().bind(agencySelector.valueProperty().isNotNull()

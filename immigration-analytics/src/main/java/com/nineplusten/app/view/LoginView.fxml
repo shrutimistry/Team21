@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -12,33 +13,49 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.LoginController">
    <children>
-      <VBox alignment="CENTER" layoutX="401.0" prefHeight="800.0" prefWidth="400.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="401.0" AnchorPane.rightAnchor="399.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="401.0" prefHeight="800.0" prefWidth="1200.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Login" textAlignment="CENTER">
-               <font>
-                  <Font size="64.0" />
-               </font>
+            <Group>
+               <children>
+                  <Label text="Immigration Services">
+                     <font>
+                        <Font name="System Bold" size="48.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="204.0" layoutY="73.0" text="Analytics Tool">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
                <VBox.margin>
-                  <Insets bottom="20.0" top="20.0" />
+                  <Insets bottom="20.0" />
                </VBox.margin>
-            </Label>
-            <TextField fx:id="username" maxWidth="300.0" promptText="Username...">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </TextField>
-            <PasswordField fx:id="password" maxWidth="300.0" promptText="Password...">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </PasswordField>
-            <Button fx:id="loginButton" defaultButton="true" maxWidth="300.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="38.0" prefWidth="300.0" text="Sign-in">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Button>
-            <ProgressIndicator fx:id="lsRunning" prefHeight="26.0" prefWidth="26.0" visible="false" />
-            <Label fx:id="message" />
+            </Group>
+            <VBox alignment="TOP_CENTER" spacing="20.0">
+               <children>
+                  <TextField fx:id="username" maxWidth="300.0" promptText="Username...">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <PasswordField fx:id="password" maxWidth="300.0" promptText="Password...">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </PasswordField>
+                  <Button fx:id="loginButton" defaultButton="true" maxWidth="300.0" mnemonicParsing="false" onAction="#loginAction" prefHeight="38.0" prefWidth="300.0" text="Log in">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <ProgressIndicator fx:id="lsRunning" prefHeight="26.0" prefWidth="26.0" visible="false" />
+                  <Label fx:id="message" />
+               </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </VBox>
          </children>
          <padding>
             <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

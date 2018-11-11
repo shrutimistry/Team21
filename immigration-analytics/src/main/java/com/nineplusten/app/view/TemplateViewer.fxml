@@ -23,10 +23,19 @@
             </Label>
             <HBox prefHeight="27.0" prefWidth="1000.0" spacing="10.0">
                <children>
-                  <ChoiceBox fx:id="templateSelector" prefHeight="26.0" prefWidth="300.0" />
+                  <AnchorPane>
+                     <children>
+                        <ChoiceBox fx:id="templateSelector" prefHeight="26.0" prefWidth="300.0" />
+                        <Label fx:id="selectTemplateText" mouseTransparent="true" prefHeight="26.0" prefWidth="245.0" text="Select template...">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <HBox fx:id="templateTableContainer" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <TableView fx:id="templateTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="3600.0" style="-fx-min-width: 100%;">
                      <HBox.margin>

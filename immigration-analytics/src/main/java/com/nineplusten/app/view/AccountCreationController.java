@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 
 public class AccountCreationController {
 
@@ -31,7 +31,7 @@ public class AccountCreationController {
   @FXML
   private TextField EmailText;
   @FXML
-  private VBox vboxholder;
+  private GridPane vboxholder;
   @FXML
   private Button submitButton;
   @FXML

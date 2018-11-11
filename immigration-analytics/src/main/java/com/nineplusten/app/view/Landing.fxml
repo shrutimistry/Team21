@@ -24,6 +24,11 @@
                   <fx:include fx:id="templateView" source="TemplateViewer.fxml" />
                </content>
             </Tab>
+            <Tab text="Account Information">
+               <content>
+                  <fx:include fx:id="accountInfo" source="AccountInfoTab.fxml" />
+               </content>
+			</Tab>
             <Tab text="Data Browser">
                <content>
                   <fx:include fx:id="dataView" source="DataViewer.fxml" />

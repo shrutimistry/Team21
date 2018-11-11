@@ -21,7 +21,7 @@
          <children>
             <Label text="Aggregated Data">
                <font>
-                  <Font size="48.0" />
+                  <Font size="40.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="50.0" top="10.0" />

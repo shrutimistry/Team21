@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -35,11 +34,11 @@
               </rowConstraints>
               <children>
                   <Label text="Your current username is:" />
-                  <TextField fx:id="UsernameText" GridPane.columnIndex="1" />
-                  <TextField fx:id="EmailText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Your current email is:" GridPane.rowIndex="1" />
-                  <Label text="Your agency name is listed as:" GridPane.rowIndex="2" />
-                  <TextField fx:id="AgencyNameText" prefHeight="27.0" prefWidth="157.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="agencyPrompt" text="Your agency name is listed as:" GridPane.rowIndex="2" />
+                  <Label fx:id="usernameText" prefHeight="17.0" prefWidth="201.0" GridPane.columnIndex="1" />
+                  <Label fx:id="emailText" prefHeight="17.0" prefWidth="201.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="agencyNameText" prefHeight="17.0" prefWidth="201.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
               </children>
           </GridPane>
             <VBox fx:id="vboxholder" spacing="10.0" />

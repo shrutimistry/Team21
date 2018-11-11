@@ -16,7 +16,7 @@ public class LandingController {
   @FXML
   private TemplateCreationController templateCreationController;
   @FXML
-  private UserManagementController UserManagementController;
+  private UserManagementController userManagementController;
   @FXML
   private AgencyDataViewController agencyDataViewController;
   @FXML
@@ -30,7 +30,7 @@ public class LandingController {
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
     templateCreationController.setMainApp(mainApp);
-    UserManagementController.setMainApp(mainApp);
+    userManagementController.setMainApp(mainApp);
     agencyDataViewController.initDataService(mainApp.getSession().getUser());
   }
 

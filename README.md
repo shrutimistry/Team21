@@ -6,6 +6,7 @@ The deliverables for this project are contained within the *Deliverables* direct
 * **Deliverable 1** - Team Agreement and team member biographies
 * **Deliverable 2** - Product Backlog(includes personas and user stories)
 * **Deliverable 3** - Project Planning and Execution (Sprint 1 and Sprint 2)
+* **Deliverable 4** - Verification and Code Review (Sprint 3 and Sprint 4)
 
 ## Source Code
 

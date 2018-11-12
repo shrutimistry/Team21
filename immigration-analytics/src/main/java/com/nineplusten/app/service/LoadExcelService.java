@@ -19,14 +19,9 @@ import javafx.concurrent.Task;
 
 public class LoadExcelService extends Service<List<String>> {
   private ReadOnlyStringProperty filePath;
-  //**TEMPORARY ADDED A NEW CONSTRUCTOR **//
-  private String filePath_string;
 
   public LoadExcelService(ReadOnlyStringProperty filePath) {
     this.filePath = filePath;
-  }
-  public LoadExcelService(String filePath_string) {
-	    this.filePath = filePath;
   }
 
   @Override
@@ -90,7 +85,7 @@ public class LoadExcelService extends Service<List<String>> {
         return columnList;
       }
 
-      public Workbook loadExcel(String path) {
+      private Workbook loadExcel(String path) {
         File file = new File(path);
         Workbook wb;
         try {

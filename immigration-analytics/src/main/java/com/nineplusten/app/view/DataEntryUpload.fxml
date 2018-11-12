@@ -22,7 +22,7 @@
                </children>
             </HBox>
             <ProgressIndicator layoutX="407.0" layoutY="230.0" progress="0.0" />
-            <Button id="fileupload" fx:id="fileUpload" layoutX="32.0" layoutY="163.0" mnemonicParsing="false" onAction="#loadExcel"  prefHeight="25.0" prefWidth="102.0" text="Choose a file..." />
+            <Button id="fileUpload" fx:id="fileUpload" layoutX="32.0" layoutY="163.0" mnemonicParsing="false" onAction="#uploadExcel"  prefHeight="25.0" prefWidth="102.0" text="Choose a file..."></Button>
       </children>
     </AnchorPane>
   </children>

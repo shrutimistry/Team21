@@ -27,6 +27,8 @@
            <Tab text="Data Entry Upload">
                <content>
                   <fx:include fx:id="dataEntry" source="DataEntryUpload.fxml" />
+               </content>
+           </Tab>
             <Tab text="Data Browser">
                <content>
                   <fx:include fx:id="dataView" source="DataViewer.fxml" />

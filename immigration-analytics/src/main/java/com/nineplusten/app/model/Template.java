@@ -2,11 +2,15 @@ package com.nineplusten.app.model;
 
 import java.util.Map;
 import java.util.Objects;
+import com.google.gson.annotations.Expose;
 
 public class Template implements Comparable<Template> {
+  @Expose
   private String _id;
+  @Expose
   private String templateName;
   // Map column_id to column_name
+  @Expose
   private Map<String, String> columns;
   
   public Template(String templateName) {

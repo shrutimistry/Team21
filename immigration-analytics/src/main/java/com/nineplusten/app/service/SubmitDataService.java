@@ -1,8 +1,11 @@
 package com.nineplusten.app.service;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.nineplusten.app.constant.Routes;
 import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.util.RestDbIO;
@@ -27,7 +30,8 @@ public class SubmitDataService extends Service<Boolean> {
     return new Task<Boolean>() {
       @Override
       protected Boolean call() throws Exception {
-        String dataJson = gson.toJson(data.get());
+        Type listType = new TypeToken<List<TemplateData>>(){}.getType();
+        String dataJson = gson.toJson(data.get(), listType);
         return RestDbIO.post(Routes.TEMPLATES_DATA, dataJson);
       }
     };

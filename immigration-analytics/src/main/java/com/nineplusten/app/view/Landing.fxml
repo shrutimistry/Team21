@@ -24,7 +24,7 @@
                   <fx:include fx:id="templateView" source="TemplateViewer.fxml" />
                </content>
             </Tab>
-            <Tab text="Data Entry Upload">
+            <Tab text="Upload Data">
                <content>
                   <fx:include fx:id="dataEntry" source="DataEntryUpload.fxml" />
                </content>

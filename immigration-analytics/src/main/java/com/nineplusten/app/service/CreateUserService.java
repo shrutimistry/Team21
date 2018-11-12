@@ -61,8 +61,6 @@ public class CreateUserService extends Service<Void> {
   public void createUserInstance() {
     gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .create();
-    // temp var to store result of posting the user into the database
-    boolean result = false;
 
     // generate the encrypted password and identify the user role for the DB
     String salt = generateSalt();
@@ -88,14 +86,12 @@ public class CreateUserService extends Service<Void> {
 
     // post the JSON object into the database
     try {
-      result = RestDbIO.post(Routes.USERS, user_obj);
+      RestDbIO.post(Routes.USERS, user_obj);
     } catch (UnirestException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
-    // DEBUGGING
-    System.out.println(result);
   }
 
   /**
@@ -123,7 +119,6 @@ public class CreateUserService extends Service<Void> {
     byte[] salt = new byte[16];
     saltGenerator.nextBytes(salt);
     // DEBUGGING
-    System.out.println(salt);
     return new String(salt, StandardCharsets.UTF_8);
   }
 

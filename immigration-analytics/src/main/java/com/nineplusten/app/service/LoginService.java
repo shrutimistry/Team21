@@ -37,7 +37,6 @@ public class LoginService extends Service<User> {
           user = verifyUserCredentials(user) ? user : null;
         } else {
           user = null;
-          System.out.println("User not found.");
         }
         return user;
       }

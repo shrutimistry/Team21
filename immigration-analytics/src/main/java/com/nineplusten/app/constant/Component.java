@@ -8,7 +8,7 @@ public enum Component {
 
   ACCOUNT(new Right[] {Right.CREATE, Right.VIEW_SELF}, new String[] {"Account Creation", "My Account"}),
   TEMPLATE(new Right[] {Right.MODIFY, Right.VIEW_ALL}, new String[] {"Template Editor", "Template Browser"}),
-  DATA(new Right[] {Right.VIEW_ALL, Right.VIEW_SELF}, new String[] {"Data Browser", "My Data"});
+  DATA(new Right[] {Right.CREATE, Right.VIEW_ALL, Right.VIEW_SELF}, new String[] {"Upload Data", "Data Browser", "My Data"});
 
   private final String[] tabTitles;
   private final Right[] rights;

@@ -4,7 +4,6 @@ import com.nineplusten.app.App;
 import com.nineplusten.app.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 
 public class AccountInfoController {
 
@@ -18,6 +17,7 @@ public class AccountInfoController {
   @FXML
   private Label agencyPrompt;
 
+  @SuppressWarnings("unused")
   private App mainApp;
   private User currUser;
 
@@ -28,25 +28,28 @@ public class AccountInfoController {
    */
   @FXML
   private void initialize() {
-	  agencyPrompt.setVisible(false);
-  }
-  
-  private void getUserInfo(User currUser) {
-	  //agencyNameText.setText(currUser.getAgency().getAgencyName());
-	  usernameText.setText(currUser.getUserId());
-	  emailText.setText(currUser.getEmail());
-	  
-	  if (currUser.getAgency() != null) {
-		  agencyPrompt.setVisible(true);
-		  agencyNameText.setText(currUser.getAgency().getAgencyName());
-	  }
+    agencyPrompt.setVisible(false);
+    agencyNameText.setVisible(false);
+    agencyPrompt.managedProperty().bind(agencyPrompt.visibleProperty());
+    agencyNameText.managedProperty().bind(agencyNameText.visibleProperty());
   }
 
-  
+  private void getUserInfo(User currUser) {
+    // agencyNameText.setText(currUser.getAgency().getAgencyName());
+    usernameText.setText(currUser.getUserId());
+    emailText.setText(currUser.getEmail());
+
+    if (currUser.getAgency() != null) {
+      agencyPrompt.setVisible(true);
+      agencyNameText.setVisible(true);
+      agencyNameText.setText(currUser.getAgency().getAgencyName());
+    }
+  }
+
   public void setMainApp(App mainApp) {
-	  this.mainApp = mainApp;
-	  
-	  this.currUser = mainApp.getSession().sessionUserProperty().get();
-	  getUserInfo(this.currUser);
+    this.mainApp = mainApp;
+
+    this.currUser = mainApp.getSession().sessionUserProperty().get();
+    getUserInfo(this.currUser);
   }
 }

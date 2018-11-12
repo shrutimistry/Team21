@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.TableColumn;
 
 public class TemplateViewController {
@@ -18,11 +19,19 @@ public class TemplateViewController {
   private TableView<String> templateTable;
 
   @FXML
+  private HBox templateTableContainer;
+
+  @FXML
   private ChoiceBox<Template> templateSelector;
+
+  @FXML
+  private Label selectTemplateText;
 
   @FXML
   private void initialize() {
     templateSelector.getItems().addAll(Cache.templates);
+    selectTemplateText.visibleProperty().bind(templateSelector.valueProperty().isNull());
+    templateTableContainer.visibleProperty().bind(templateSelector.valueProperty().isNotNull());
     configureTemplateTable();
   }
 

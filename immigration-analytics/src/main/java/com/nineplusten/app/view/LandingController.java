@@ -26,7 +26,8 @@ public class LandingController {
   private TabPane tabBar;
   @FXML
   private AccountInfoController accountInfoController;
-
+  @FXML
+  private DataEntryViewController dataEntryController;
 
   private App mainApp;
 
@@ -38,6 +39,8 @@ public class LandingController {
     templateCreationController.setMainApp(mainApp);
     accountInfoController.setMainApp(mainApp);
     agencyDataViewController.initDataService(mainApp.getSession().getUser());
+    dataEntryController.setMainApp(mainApp);
+    dataEntryController.configureServices();
   }
 
   public void configureUserView() {

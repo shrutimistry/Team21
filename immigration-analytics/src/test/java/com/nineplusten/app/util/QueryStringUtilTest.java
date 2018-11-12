@@ -34,8 +34,6 @@ public class QueryStringUtilTest {
     String actual = QueryStringUtil.getQueryString(o);
     String expected =
         "?q=" + URLEncoder.encode("{\"Name\":\"Dennis\"}", ENC);
-    System.out.println(expected);
-    System.out.println(actual);
     assertEquals(expected, actual);
   }
 }

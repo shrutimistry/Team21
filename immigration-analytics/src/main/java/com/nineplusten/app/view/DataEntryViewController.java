@@ -64,11 +64,11 @@ public class DataEntryViewController {
 	    chooser.getExtensionFilters().addAll(new ExtensionFilter("Excel Files (.xlsx)", "*.xlsx"));
 	    File selectedFile = chooser.showOpenDialog(mainApp.getPrimaryStage());
 	    if (selectedFile != null) {
-	    	openFile(selectedFile);
+	    	/* openFile(selectedFile);
 	    	String excelPath = (selectedFile.getAbsolutePath());
 	    	LoadExcelService excelparser = new LoadExcelService(excelPath);
 	    	Workbook wb;
-	    	wb = excelparser.loadExcel(excelPath);
+	    	wb = excelparser.loadExcel(excelPath); */
 	    }
 	    
 	  }

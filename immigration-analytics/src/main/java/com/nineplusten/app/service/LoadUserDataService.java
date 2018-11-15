@@ -13,7 +13,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 
-public class LoadUserService extends Service<List<String[]>> {
+public class LoadUserDataService extends Service<List<String[]>> {
 
     @Override
     protected Task<List<String[]>> createTask() {
@@ -46,7 +46,7 @@ public class LoadUserService extends Service<List<String[]>> {
             String[] temp = new String[3];
             temp[0] = jsonObject.optString("user_id");
             temp[1] = jsonObject.optString("email");
-            temp[2] = jsonObject.optString("user_role");
+            temp[2] = extractRole(jsonObject.optString("user_role"));
 
             users.add(temp);
         }
@@ -54,4 +54,15 @@ public class LoadUserService extends Service<List<String[]>> {
         return users;
     }
 
+    private String extractRole(String s){
+        //TODO: replace with proper way to extract the role name
+        s = s.replaceAll("\\[", "");
+        s = s.replaceAll("\\]", "");
+        s = s.replaceAll("\\{", "");
+        s = s.replaceAll("\\}", "");
+        s = s.replaceAll("\"", "");
+        s = s.split(",")[0];
+        s = s.split(":")[1];
+        return s;
+    }
 }

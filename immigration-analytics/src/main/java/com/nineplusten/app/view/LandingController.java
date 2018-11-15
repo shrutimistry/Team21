@@ -21,8 +21,6 @@ public class LandingController {
   @FXML
   private TemplateCreationController templateCreationController;
   @FXML
-  private AccountManagementController accountManagementController;
-  @FXML
   private AgencyDataViewController agencyDataViewController;
   @FXML
   private TabPane tabBar;
@@ -39,7 +37,6 @@ public class LandingController {
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
     templateCreationController.setMainApp(mainApp);
-    accountManagementController.setMainApp(mainApp);
     accountInfoController.setMainApp(mainApp);
     agencyDataViewController.initDataService(mainApp.getSession().getUser());
     dataEntryController.setMainApp(mainApp);

@@ -52,7 +52,7 @@ class User {
   }
 }
 
-public class UserManagementController {
+public class AccountManagementController {
 
   TableView<User> userTable;
   LoadUserService userService;

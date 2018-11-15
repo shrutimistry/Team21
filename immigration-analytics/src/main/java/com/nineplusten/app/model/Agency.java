@@ -1,9 +1,12 @@
 package com.nineplusten.app.model;
 
 import java.util.Objects;
+import com.google.gson.annotations.Expose;
 
 public class Agency implements Comparable<Agency>{
+  @Expose
   private String _id;
+  @Expose
   private String agencyName;
   
   public Agency(String agencyName) {

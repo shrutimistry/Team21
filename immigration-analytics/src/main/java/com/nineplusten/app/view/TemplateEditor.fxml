@@ -2,12 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -27,48 +24,47 @@
             </Label>
             <HBox prefHeight="27.0" prefWidth="1000.0" spacing="10.0">
                <children>
-                  <ChoiceBox fx:id="templateSelector" prefHeight="26.0" prefWidth="300.0" />
-               </children>
-               <padding>
-                  <Insets left="40.0" right="40.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <VBox fx:id="templateSideControls" alignment="BOTTOM_CENTER" spacing="10.0">
+                  <AnchorPane>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#addColumn" text="+" />
-                        <Button mnemonicParsing="false" onAction="#delColumn" prefHeight="26.0" prefWidth="29.0" text="-" />
+                        <ChoiceBox fx:id="templateSelector" prefHeight="26.0" prefWidth="300.0" />
+                        <Label fx:id="selectTemplateText" mouseTransparent="true" prefHeight="26.0" prefWidth="263.0" text="Select template...">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
                      </children>
-                  </VBox>
-                  <TableView fx:id="templateTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="3600.0" style="-fx-min-width: 100%;">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin></TableView>
+                  </AnchorPane>
                </children>
             </HBox>
-            <ButtonBar fx:id="templateMainControls" buttonMinWidth="40.0" prefHeight="40.0" prefWidth="200.0">
-              <buttons>
-                <Button mnemonicParsing="false" onAction="#save" prefHeight="26.0">
-                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="save_24_0_000000_none.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button layoutX="968.0" layoutY="13.0" mnemonicParsing="false" onAction="#discardChanges" prefHeight="26.0">
-                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="times_24_0_000000_none.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-              </buttons>
-            </ButtonBar>
+            <VBox fx:id="templateContainer" spacing="10.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <TableView fx:id="templateTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="3600.0" style="-fx-min-width: 100%;">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </TableView>
+                     </children>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <HBox fx:id="templateSideControls" alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#addColumn" text="Add Column" />
+                              <Button mnemonicParsing="false" onAction="#delColumn" prefHeight="26.0" text="Remove Column" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="templateMainControls" alignment="CENTER_RIGHT" prefHeight="34.0" prefWidth="756.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#discardChanges" prefHeight="26.0" text="Discard" />
+                            <Button defaultButton="true" mnemonicParsing="false" onAction="#save" prefHeight="26.0" text="Save" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
          <padding>
             <Insets bottom="50.0" top="50.0" />

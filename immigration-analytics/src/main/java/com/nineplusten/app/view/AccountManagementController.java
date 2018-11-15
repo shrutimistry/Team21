@@ -17,13 +17,13 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-class User {
+class UserData {
 
   StringProperty userID;
   StringProperty email;
   StringProperty role;
   
-  public User(String userID, String email, String role){
+  public UserData(String userID, String email, String role){
     userIDProperty().setValue(userID);
     emailProperty().setValue(userID);
     userIDProperty().setValue(userID);
@@ -54,7 +54,7 @@ class User {
 
 public class AccountManagementController {
 
-  TableView<User> userTable;
+  TableView<UserData> userTable;
   LoadUserService userService;
 
   private App mainApp;
@@ -62,11 +62,11 @@ public class AccountManagementController {
   @FXML
   private void initialize() {
 
-    userTable = new TableView<User>();
+    userTable = new TableView<UserData>();
 
-    TableColumn<User, String> userIDColumn = new TableColumn<>("User ID");
-    TableColumn<User, String> emailColumn = new TableColumn<>("Email");
-    TableColumn<User, String> roleColumn = new TableColumn<>("Role");
+    TableColumn<UserData, String> userIDColumn = new TableColumn<>("User ID");
+    TableColumn<UserData, String> emailColumn = new TableColumn<>("Email");
+    TableColumn<UserData, String> roleColumn = new TableColumn<>("Role");
 
     userIDColumn.setCellValueFactory(new PropertyValueFactory("userID"));
     emailColumn.setCellValueFactory(new PropertyValueFactory("email"));
@@ -89,14 +89,14 @@ public class AccountManagementController {
     this.mainApp = mainApp;
   }
 
-  private ObservableList<User> parseUsers(){
+  private ObservableList<UserData> parseUsers(){
     List<String[]> userData = userService.getValue();
     
-    List<User> userList = new ArrayList<>();
+    List<UserData> userList = new ArrayList<>();
 
     for (int i = 0; i < userData.size(); i++){
         String[] tempArray = userData.get(i);
-        User tempUser = new User(tempArray[0], tempArray[1], tempArray[2]);
+        UserData tempUser = new UserData(tempArray[0], tempArray[1], tempArray[2]);
         userList.add(tempUser);
     }
 
@@ -104,8 +104,8 @@ public class AccountManagementController {
     return toObservableList(userList);
   }
 
-  private ObservableList<User> toObservableList(List<User> list){
-    ObservableList<User> observableList = FXCollections.observableArrayList();
+  private ObservableList<UserData> toObservableList(List<UserData> list){
+    ObservableList<UserData> observableList = FXCollections.observableArrayList();
 
     for (int i = 0; i < list.size(); i++){
       observableList.add(list.get(i));

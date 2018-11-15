@@ -9,36 +9,46 @@
    <children>
       <TabPane fx:id="tabBar" layoutX="14.0" layoutY="14.0" prefHeight="278.0" prefWidth="698.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-          <Tab text="Account Creation">
-            <content>
-              <fx:include source="AccountCreationTab.fxml" />
-            </content>
-          </Tab>
-          <Tab text="Template Editor">
-            <content>
-              <fx:include fx:id="templateCreation" source="TemplateEditor.fxml" />
-            </content>
-          </Tab>
-            <Tab text="Template Browser">
-               <content>
-                  <fx:include fx:id="templateView" source="TemplateViewer.fxml" />
-               </content>
-            </Tab>
-             <Tab text="Account Management">
-            <content>
-              <fx:include fx:id="accountManagement" source="AccountManagementTab.fxml" />
-            </content>
-          </Tab>
-            <Tab text="Data Browser">
-               <content>
-                  <fx:include fx:id="dataView" source="DataViewer.fxml" />
-               </content>
-            </Tab>
-            <Tab text="My Data">
-               <content>
-                  <fx:include fx:id="agencyDataView" source="AgencyDataViewer.fxml" />
-               </content>
-            </Tab>
+        <Tab text="My Account">
+          <content>
+            <fx:include fx:id="accountInfo" source="AccountInfoTab.fxml" />
+          </content>
+			</Tab>
+      <Tab text="Account Creation">
+          <content>
+            <fx:include source="AccountCreationTab.fxml" />
+          </content>
+      </Tab>
+      <Tab text="Template Editor">
+          <content>
+            <fx:include fx:id="templateCreation" source="TemplateEditor.fxml" />
+          </content>
+      </Tab>
+      <Tab text="Template Browser">
+          <content>
+            <fx:include fx:id="templateView" source="TemplateViewer.fxml" />
+          </content>
+      </Tab>
+      <Tab text="Account Management">
+          <content>
+            <fx:include fx:id="accountManagement" source="AccountManagementTab.fxml" />
+          </content>
+      </Tab>
+      <Tab text="Upload Data">
+          <content>
+            <fx:include fx:id="dataEntry" source="DataEntryUpload.fxml" />
+          </content>
+      </Tab>
+      <Tab text="Data Browser">
+          <content>
+            <fx:include fx:id="dataView" source="DataViewer.fxml" />
+          </content>
+      </Tab>
+      <Tab text="My Data">
+          <content>
+            <fx:include fx:id="agencyDataView" source="AgencyDataViewer.fxml" />
+          </content>
+      </Tab>
         </tabs>
       </TabPane>
       <Button layoutX="1128.0" layoutY="3.0" mnemonicParsing="false" onAction="#logout" text="Logout" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="3.0" />

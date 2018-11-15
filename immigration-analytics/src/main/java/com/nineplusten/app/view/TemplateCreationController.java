@@ -23,7 +23,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -37,6 +36,7 @@ import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -46,15 +46,21 @@ public class TemplateCreationController {
   // These items are for the combox set up
   @FXML
   private TableView<String> templateTable;
+  
+  @FXML
+  private VBox templateContainer;
 
   @FXML
   private ChoiceBox<Template> templateSelector;
 
   @FXML
-  private VBox templateSideControls;
+  private HBox templateSideControls;
 
   @FXML
-  private ButtonBar templateMainControls;
+  private HBox templateMainControls;
+  
+  @FXML
+  private Label selectTemplateText;
 
   private final String CSS_TRANSPARENT = "-fx-background-color: transparent;";
   private final String CSS_SELECTED = "-fx-background-color: rgba(0, 147, 255, .2);";
@@ -72,6 +78,8 @@ public class TemplateCreationController {
     gson = new GsonBuilder().registerTypeAdapter(Template.class, new TemplateSerializer()).create();
     editor = new TemplateEditorModel();
     templateSelector.getItems().addAll(Cache.templates);
+    selectTemplateText.visibleProperty().bind(templateSelector.valueProperty().isNull());
+    templateContainer.visibleProperty().bind(templateSelector.valueProperty().isNotNull());
     configureTemplateTable();
     templateSideControls.disableProperty().bind(templateSelector.valueProperty().isNull());
     templateMainControls.disableProperty().bind(editor.modifiedProperty().not());

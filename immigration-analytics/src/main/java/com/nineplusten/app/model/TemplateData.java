@@ -10,21 +10,19 @@ public class TemplateData {
   private String clientId;
   @Expose()
   private Map<String, String> fieldData;
-  @Expose(deserialize=false)
+  @Expose(deserialize = false)
   private Template template;
-  @Expose(deserialize=false)
+  @Expose(deserialize = false)
   private Agency agency;
-  
-  public TemplateData(String _id, Template template, Agency agency, String clientId,
+
+  public TemplateData(Template template, Agency agency, String clientId,
       Map<String, String> fieldData) {
-    super();
-    this._id = _id;
     this.clientId = clientId;
     this.fieldData = fieldData;
     this.template = template;
     this.agency = agency;
   }
-  
+
   public TemplateData(Map<String, String> fieldData) {
     this.fieldData = fieldData;
   }
@@ -32,18 +30,23 @@ public class TemplateData {
   public String get_id() {
     return _id;
   }
+
   public void set_id(String _id) {
     this._id = _id;
   }
+
   public String getClientId() {
     return clientId;
   }
+
   public void setClientId(String clientId) {
     this.clientId = clientId;
   }
+
   public Map<String, String> getFieldData() {
     return fieldData;
   }
+
   public void setFieldData(Map<String, String> fieldData) {
     this.fieldData = fieldData;
   }

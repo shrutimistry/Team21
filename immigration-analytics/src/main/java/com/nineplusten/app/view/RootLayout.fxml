@@ -2,7 +2,5 @@
 
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="800.0" prefWidth="1200.0"
-	xmlns="http://javafx.com/javafx/8.0.171"
-	xmlns:fx="http://javafx.com/fxml/1" />
 
+<BorderPane prefHeight="800.0" prefWidth="1200.0" style="-fx-background-image: url(&quot;/what-the-hex/what-the-hex.png&quot;);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" />

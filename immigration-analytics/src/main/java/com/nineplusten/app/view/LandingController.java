@@ -26,7 +26,10 @@ public class LandingController {
   private AgencyDataViewController agencyDataViewController;
   @FXML
   private TabPane tabBar;
-
+  @FXML
+  private AccountInfoController accountInfoController;
+  @FXML
+  private DataEntryViewController dataEntryController;
 
   private App mainApp;
 
@@ -37,7 +40,10 @@ public class LandingController {
     this.mainApp = mainApp;
     templateCreationController.setMainApp(mainApp);
     accountManagementController.setMainApp(mainApp);
+    accountInfoController.setMainApp(mainApp);
     agencyDataViewController.initDataService(mainApp.getSession().getUser());
+    dataEntryController.setMainApp(mainApp);
+    dataEntryController.configureServices();
   }
 
   public void configureUserView() {
@@ -53,6 +59,8 @@ public class LandingController {
       });
     });
     tabBar.getTabs().retainAll(userTabs);
+
+    agencyDataViewController.initDataService(mainApp.getSession().getUser());
   }
 
   @FXML

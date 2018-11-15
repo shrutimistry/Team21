@@ -37,7 +37,6 @@ public class LoginService extends Service<User> {
           user = verifyUserCredentials(user) ? user : null;
         } else {
           user = null;
-          System.out.println("User not found.");
         }
         return user;
       }
@@ -47,7 +46,7 @@ public class LoginService extends Service<User> {
   private JSONObject retrieveUserJson() throws UnirestException {
     JSONArray userResult;
     // Retrieve JSONarray for login user, query by unique id
-    userResult = RestDbIO.get(Routes.USERS, "user_id", username.get());
+    userResult = RestDbIO.get(Routes.USERS, "user_id", username.get().toLowerCase());
     // Attempt to retrieve single object from JSON array
     // If lookup failed, user == null
     JSONObject user = RestDbIO.singleResultToJSONObject(userResult);

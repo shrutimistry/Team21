@@ -27,7 +27,7 @@ public class DeleteUserService extends Service<Void> {
 
     private void deleteUser() {
         try {
-            RestDbIO.delete("users/", "user_id", userID);
+            RestDbIO.delete("/users", "user_id", userID);
         } catch (UnirestException e){
             e.printStackTrace();
         }

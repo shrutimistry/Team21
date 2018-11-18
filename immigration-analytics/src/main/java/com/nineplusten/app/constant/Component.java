@@ -6,7 +6,7 @@ import java.util.Map;
 
 public enum Component {
 
-  ACCOUNT(new Right[] {Right.CREATE, Right.VIEW_SELF}, new String[] {"Account Creation", "My Account"}),
+  ACCOUNT(new Right[] {Right.CREATE, Right.VIEW_SELF,  Right.VIEW_ALL}, new String[] {"Account Creation", "My Account", "Account Management"}),
   TEMPLATE(new Right[] {Right.MODIFY, Right.VIEW_ALL}, new String[] {"Template Editor", "Template Browser"}),
   DATA(new Right[] {Right.CREATE, Right.VIEW_ALL, Right.VIEW_SELF}, new String[] {"Upload Data", "Data Browser", "My Data"});
 

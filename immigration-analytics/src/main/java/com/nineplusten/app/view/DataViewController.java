@@ -1,15 +1,23 @@
 package com.nineplusten.app.view;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.w3c.dom.Document;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.service.TemplateDataRetrievalService;
+import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -42,7 +50,7 @@ public class DataViewController {
   private ProgressIndicator dataServiceProgressIndicator;
 
   private TemplateDataRetrievalService dataService;
-  
+
   private App mainApp;
 
   @FXML
@@ -55,7 +63,7 @@ public class DataViewController {
     configureBindings();
     configureListeners();
   }
-  
+
   @FXML
   private void generateReport() {
     FileChooser chooser = new FileChooser();
@@ -64,11 +72,38 @@ public class DataViewController {
     chooser.getExtensionFilters().addAll(new ExtensionFilter("PDF Files (.pdf)", "*.pdf"));
     File selectedFile = chooser.showSaveDialog(mainApp.getPrimaryStage());
     if (selectedFile != null) {
-      String path = (selectedFile.getAbsolutePath());
-      
+      // TODO: generate HTML
+      //String path = (selectedFile.getAbsolutePath());
+      Document document;
+      String pathURL;
+      try {
+        pathURL = getClass().getClassLoader().getResource("report.html").toString();
+        document = ReportUtil.html5ParseDocument(pathURL, 0);
+      } catch (IOException e) {
+        e.printStackTrace();
+        document = null;
+        pathURL = null;
+      }
+      if (document != null) {
+        try (OutputStream os = new FileOutputStream(selectedFile)) {
+          PdfRendererBuilder builder = new PdfRendererBuilder();
+          builder.withW3cDocument(document, pathURL);
+          builder.toStream(os);
+          builder.run();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+      try {
+        PDDocument doc = PDDocument.load(selectedFile);
+        doc.removePage(doc.getNumberOfPages() - 1);
+        doc.save(selectedFile);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
-  
+
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
   }
@@ -107,7 +142,7 @@ public class DataViewController {
         dataService.restart();
       }
     });
-    
+
   }
 
   private void configureTable() {

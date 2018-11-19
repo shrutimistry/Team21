@@ -1,6 +1,5 @@
 package com.nineplusten.app.view;
 
-import com.nineplusten.app.App;
 import com.nineplusten.app.service.LoadUserDataService;
 import com.nineplusten.app.service.DeleteUserService;
 import com.nineplusten.app.model.UserData;
@@ -68,12 +67,13 @@ public class AccountManagementController {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @FXML
   private void initialize() {
     userService = new LoadUserDataService();
-    userIDColumn.setCellValueFactory(new PropertyValueFactory("userID"));
-    emailColumn.setCellValueFactory(new PropertyValueFactory("email"));
-    roleColumn.setCellValueFactory(new PropertyValueFactory("role"));
+    userIDColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("userID"));
+    emailColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("email"));
+    roleColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("role"));
 
     userTable.getColumns().setAll(userIDColumn, emailColumn, roleColumn);
     userTable.setPlaceholder(new Label("No users found."));

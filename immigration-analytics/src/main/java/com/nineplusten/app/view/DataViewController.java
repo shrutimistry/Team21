@@ -1,7 +1,9 @@
 package com.nineplusten.app.view;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.Template;
@@ -18,6 +20,8 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class DataViewController {
   @FXML
@@ -38,6 +42,8 @@ public class DataViewController {
   private ProgressIndicator dataServiceProgressIndicator;
 
   private TemplateDataRetrievalService dataService;
+  
+  private App mainApp;
 
   @FXML
   private void initialize() {
@@ -49,6 +55,23 @@ public class DataViewController {
     configureBindings();
     configureListeners();
   }
+  
+  @FXML
+  private void generateReport() {
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Save Report File");
+    chooser.setInitialFileName("*.pdf");
+    chooser.getExtensionFilters().addAll(new ExtensionFilter("PDF Files (.pdf)", "*.pdf"));
+    File selectedFile = chooser.showSaveDialog(mainApp.getPrimaryStage());
+    if (selectedFile != null) {
+      String path = (selectedFile.getAbsolutePath());
+      
+    }
+  }
+  
+  public void setMainApp(App mainApp) {
+    this.mainApp = mainApp;
+  }
 
   private void configureBindings() {
     templateSelector.disableProperty().bind(agencySelector.valueProperty().isNull());
@@ -56,7 +79,7 @@ public class DataViewController {
     templateNameText.textProperty().bind(templateSelector.valueProperty().asString());
     dataContainer.visibleProperty().bind(agencySelector.valueProperty().isNotNull()
         .and(templateSelector.valueProperty().isNotNull()));
-    dataTable.disableProperty().bind(dataService.runningProperty());
+    dataContainer.disableProperty().bind(dataService.runningProperty());
     dataServiceProgressIndicator.visibleProperty().bind(dataService.runningProperty());
   }
 

@@ -1,0 +1,4 @@
+.table-view .column-header .label {
+    -fx-text-fill: black !important;
+    -fx-opacity: 1 !important;
+}

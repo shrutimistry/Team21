@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import static j2html.TagCreator.*;
 import org.w3c.dom.Document;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
@@ -19,6 +20,7 @@ import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,10 +28,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.util.Callback;
 
 public class DataViewController {
   @FXML
@@ -64,8 +68,51 @@ public class DataViewController {
     configureListeners();
   }
 
+  private void generateHTML() {
+	  ObservableList<TableColumn<TemplateData,?>> cols = dataTable.getColumns();
+	   Callback<TableView<TemplateData>, TableRow<TemplateData>> rows = dataTable.getRowFactory();
+	  String header = "<!DOCTYPE html>\n" + 
+	  		"<html>\n" + 
+	  		"\n" + 
+	  		"<head>\n" + 
+	  		"    <link rel=\"stylesheet\" href=\"styles.css\" />\n" + 
+	  		"    <title>ICARE Report</title>\n" + 
+	  		"</head>";
+	  String body = "<body>\n" + 
+	  		"    <div class='header'>\n" + 
+	  		"        <h1 class='title'>ICARE Report</h1>\n" + 
+	  		"    </div>\n" + 
+	  		"    <div class='template'>\n" + 
+	  		"        <div>\n" + 
+	  		"            <h2 class='heading'>" + templateNameText + "</h2>\n" +
+	  		"        </div>";
+	  String table = "div class='graphic-data'>\n" + 
+	  		"            <img src=\"chart.png\" />\n" + 
+	  		"        </div>\n" + 
+	  		"        <div class='table-container'>\n" + 
+	  		"            <table class='table-data'>\n" + 
+	  		"                <thead>\n" + 
+	  		"                    <tr>\n" ;
+	 String columns = null;
+	  int i = 0;
+	  while ( i < cols.size()) { 
+		  columns = columns + "<th>" + (cols.get(i)).getText() + "</th>\n";
+		  i++;
+	  }
+      
+	String end = "                    </tr>\n" + 
+	"                </thead>\n" + 
+	"                <tbody>\n" + 
+	"                    <tr>\n";
+	  String html = header + body + table + columns + end;
+	  System.out.print(html);
+	  System.out.print(cols.size());
+	  
+  }
+  
   @FXML
   private void generateReport() {
+	this.generateHTML();
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Save Report File");
     chooser.setInitialFileName("*.pdf");

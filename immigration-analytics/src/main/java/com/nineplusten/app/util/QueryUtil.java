@@ -3,8 +3,10 @@ package com.nineplusten.app.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import org.json.JSONObject;
+import com.nineplusten.app.model.Agency;
+import com.nineplusten.app.model.Template;
 
-public class QueryStringUtil {
+public class QueryUtil {
   public static String getQueryString(String name, Object value) {
     StringBuilder queryString = new StringBuilder();
     queryString.append("?q=");
@@ -28,5 +30,17 @@ public class QueryStringUtil {
       }
     }
     return queryString.toString();
+  }
+  
+  public static JSONObject buildTemplateJsonQuery(Template template, Agency agency) {
+    JSONObject jsQuery = new JSONObject();
+    JSONObject templateSubQuery = new JSONObject();
+    JSONObject agencySubQuery = new JSONObject();
+
+    templateSubQuery.put("_id", template.get_id());
+    agencySubQuery.put("_id", agency.get_id());
+    jsQuery.put("template", templateSubQuery);
+    jsQuery.put("agency", agencySubQuery);
+    return jsQuery;
   }
 }

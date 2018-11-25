@@ -11,13 +11,13 @@ public class RestDbIOGetRequest extends GetRequest {
   }
 
   public HttpRequest queryString(String name, Object value) {
-    String queryString = QueryStringUtil.getQueryString(name, value);
+    String queryString = QueryUtil.getQueryString(name, value);
     this.url += queryString;
     return this;
   }
 
   public HttpRequest queryString(JSONObject jsonQuery) {
-    String queryString = QueryStringUtil.getQueryString(jsonQuery);
+    String queryString = QueryUtil.getQueryString(jsonQuery);
     this.url += queryString;
     return this;
   }

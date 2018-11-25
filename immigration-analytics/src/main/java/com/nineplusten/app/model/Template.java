@@ -12,15 +12,18 @@ public class Template implements Comparable<Template> {
   // Map column_id to column_name
   @Expose
   private Map<String, String> columns;
+  private String templateFileName;
   
   public Template(String templateName) {
     this.templateName = templateName;
+    this.templateFileName = templateName.replaceAll("-", "").replaceAll("[ ]+", "_");
   }
-  
+    
   public Template(String _id, String templateName, Map<String, String> columns) {
     this._id = _id;
     this.templateName = templateName;
     this.columns = columns;
+    this.templateFileName = templateName.replaceAll("-", "").replaceAll("[ ]+", "_");
   }
   
   public String get_id() {
@@ -42,6 +45,18 @@ public class Template implements Comparable<Template> {
     this.columns = columns;
   }
   
+  public String getTemplateFilePath() {
+    return "template/" + templateFileName + ".xlsx";
+  }
+  
+  public String getTemplateFileName() {
+    return templateFileName;
+  }
+
+  public void setTemplateFileName(String templateFileName) {
+    this.templateFileName = templateFileName;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o instanceof Template) {

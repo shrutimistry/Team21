@@ -3,7 +3,6 @@ package com.nineplusten.app.service;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-import org.json.JSONObject;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,6 +12,7 @@ import com.nineplusten.app.constant.Routes;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
+import com.nineplusten.app.util.QueryUtil;
 import com.nineplusten.app.util.RestDbIO;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -49,8 +49,8 @@ public class TemplateDataRetrievalService extends Service<ObservableList<Templat
     try {
       Type templateDataType = new TypeToken<Collection<TemplateData>>() {}.getType();
       List<TemplateData> resultList = gson.fromJson(
-          RestDbIO.get(Routes.TEMPLATES_DATA, buildTemplateJsonQuery(template.get(), agency.get()))
-              .toString(),
+          RestDbIO.get(Routes.TEMPLATES_DATA,
+              QueryUtil.buildTemplateJsonQuery(template.get(), agency.get())).toString(),
           templateDataType);
       result = FXCollections.observableArrayList(resultList);
     } catch (UnirestException e) {
@@ -59,17 +59,4 @@ public class TemplateDataRetrievalService extends Service<ObservableList<Templat
     }
     return result;
   }
-
-  private JSONObject buildTemplateJsonQuery(Template template, Agency agency) {
-    JSONObject jsQuery = new JSONObject();
-    JSONObject templateSubQuery = new JSONObject();
-    JSONObject agencySubQuery = new JSONObject();
-
-    templateSubQuery.put("_id", template.get_id());
-    agencySubQuery.put("_id", agency.get_id());
-    jsQuery.put("template", templateSubQuery);
-    jsQuery.put("agency", agencySubQuery);
-    return jsQuery;
-  }
-
 }

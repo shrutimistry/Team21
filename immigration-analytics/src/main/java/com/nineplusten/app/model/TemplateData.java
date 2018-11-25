@@ -1,6 +1,7 @@
 package com.nineplusten.app.model;
 
 import java.util.Map;
+import java.util.Objects;
 import com.google.gson.annotations.Expose;
 
 public class TemplateData {
@@ -65,6 +66,19 @@ public class TemplateData {
 
   public void setAgency(Agency agency) {
     this.agency = agency;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof TemplateData) {
+      return ((TemplateData) o).getFieldData().equals(this.fieldData);
+    }
+    return false;
+  }
+  
+  @Override
+  public int hashCode() {
+    return Objects.hash(fieldData);
   }
 
 }

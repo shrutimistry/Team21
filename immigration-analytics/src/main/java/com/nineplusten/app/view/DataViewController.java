@@ -121,6 +121,7 @@ public class DataViewController {
 				            h2(templateNameText.getText() + "'s Reffered vs Recieved").withClass("heading")
 				    			),
 			    	div(attrs(".graphic-data")).with(img().withSrc("src/main/resources/barChart.png").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+			    	//div(attrs(".graphic-data")).with(img().withSrc("src/main/resources/pieChart.png").withAlt("Pie Chart illustrating the various age groups represented in the service"))
 			    )
 			);
 	 

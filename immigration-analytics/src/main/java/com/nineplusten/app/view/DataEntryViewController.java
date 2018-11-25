@@ -29,6 +29,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
@@ -83,7 +84,9 @@ public class DataEntryViewController {
     Image ulImage =
         new Image(getClass().getClassLoader().getResourceAsStream("upload_16_0_000000_none.png"));
     downloadButton.setGraphic(new ImageView(dlImage));
+    downloadButton.setTooltip(new Tooltip("Download ICARE template"));
     browseButton.setGraphic(new ImageView(ulImage));
+    browseButton.setTooltip(new Tooltip("Upload ICARE template with data"));
   }
 
   @FXML

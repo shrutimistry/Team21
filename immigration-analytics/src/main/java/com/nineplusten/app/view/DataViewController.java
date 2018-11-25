@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
@@ -18,8 +20,10 @@ import org.w3c.dom.Document;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
+import com.nineplusten.app.model.Reports;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
+import com.nineplusten.app.service.DoubleBarGraph;
 import com.nineplusten.app.service.PieChart_AWT;
 import com.nineplusten.app.service.TemplateDataRetrievalService;
 import com.nineplusten.app.util.ReportUtil;
@@ -74,7 +78,7 @@ public class DataViewController {
     configureListeners();
   }
 
-  private void generateHTML() {
+  private String generateHTML() {
 	  ObservableList<TableColumn<TemplateData,?>> cols = dataTable.getColumns();
 	   Callback<TableView<TemplateData>, TableRow<TemplateData>> rows = dataTable.getRowFactory();
 	  String header = "<!DOCTYPE html>\n" + 
@@ -90,151 +94,108 @@ public class DataViewController {
 	  		"    </div>\n" + 
 	  		"    <div class='template'>\n" + 
 	  		"        <div>\n" + 
-	  		"            <h2 class='heading'>" + templateNameText + "</h2>\n" +
+	  		"            <h2 class='heading'>" + templateNameText.getText() + "</h2>\n" +
 	  		"        </div>";
-	  String table = "div class='graphic-data'>\n" + 
-	  		"            <img src=\"chart.png\" />\n" + 
-	  		"        </div>\n" + 
-	  		"        <div class='table-container'>\n" + 
-	  		"            <table class='table-data'>\n" + 
-	  		"                <thead>\n" + 
-	  		"                    <tr>\n" ;
-	 String columns = null;
-	  int i = 0;
-	  while ( i < cols.size()) { 
-		  columns = columns + "<th>" + (cols.get(i)).getText() + "</th>\n";
-		  i++;
-	  }
+	  String table = "<div class='graphic-data'>\n" + 
+	  		"            <img src=\"src/main/resources/barChart.png\" alt=\"Bar Chart\">\n" + 
+	  		"        </div>\n"
+	  		+ "</body>"
+	  		+ "</html>";
+	  String html = header + body + table;
+	  return html;
+	  
+  }
+  
+  	private CategoryDataset createDataset() {
       
-	String columnend = "                    </tr>\n" + 
-	"                </thead>\n" + 
-	"                <tbody>\n" + 
-	"                    <tr>\n";
-	
-	
-	  String html = header + body + table + columns + columnend;
-	  System.out.print(html);
-	  System.out.print(cols.size());
-	  
-  }
-  
-  private List<Object> getValuesforColumn(String columnID) {
-	  //final String COLUMN_ID = "client_validation_type_id";
-	    List<Object> rowCount = new ArrayList<>();
-	    List<String> values = new ArrayList<>();
-	    int total = 0;
-	    for (TemplateData row: dataTable.getItems()) {
-	      values.add(row.getFieldData().get(columnID));
-	      total += 1;
-	      
-	    }
-	    rowCount.add(total);
-	    rowCount.add(values);
-	    
-	   return rowCount;
-  }
-  
-  private double getTargetChildPercent() {
-	  double total_rows = (Integer) getValuesforColumn("target_group_children_ind").get(0);
-	  System.out.println("total rows" + total_rows);
-	  List<String> target_child = (List<String>) getValuesforColumn("target_group_children_ind").get(1);
-	  int i = 0;
-	  int count_child = 0;
-	  for (i = 0; i < target_child.size(); i++) {
-		  if (target_child.get(i).equalsIgnoreCase("yes")) {
-			  count_child += 1;
-		  }
-	  }
-	  System.out.println("count child " + count_child);
-	  double child_percent_decimal = count_child/total_rows;
-	  double child_percent = child_percent_decimal * 100;
-	  System.out.println("percent hin child " + child_percent_decimal);
+      final String series1 = "Referred";
+      final String series2 = "Recieved";
 
-	  return child_percent;
-	  
+      final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+      dataset.addValue(this.getTemplateData().get(0), "Percentage", series1);
+      dataset.addValue(this.getTemplateData().get(1), "Percentage", series2);
+      return dataset;
+      
   }
-  
-  private double getTargetYouthPercent() {
-	  double total_rows = (Integer) getValuesforColumn("target_group_youth_ind").get(0);
-	  List<String> target_youth = (List<String>) getValuesforColumn("target_group_youth_ind").get(1);
-	  int i = 0;
-	  int count_youth = 0;
-	  for (i = 0; i < target_youth.size(); i++) {
-		  if (target_youth.get(i).equalsIgnoreCase("yes")) {
-			  count_youth += 1;
-		  }
-	  }
-	  double youth_percent = (count_youth/total_rows)*100;
-	  return youth_percent;
-	  
-  }
-  private double getTargetSeniorPercent() {
-	  double total_rows = (Integer) getValuesforColumn("target_group_senior_ind").get(0);
-	  List<String> target_senior = (List<String>) getValuesforColumn("target_group_senior_ind").get(1);
-	  int i = 0;
-	  int count_senior = 0;
-	  for (i = 0; i < target_senior.size(); i++) {
-		  if (target_senior.get(i).equalsIgnoreCase("yes")) {
-			  count_senior += 1;
-		  }
-	  }
-	  double senior_percent = (count_senior/total_rows)*100;
-	  return senior_percent;
-	  
-  }
-  
-  private DefaultPieDataset createDataset() {
+  /*private DefaultPieDataset createPieDataset() {
 	  DefaultPieDataset target_data = new DefaultPieDataset();
-	  target_data.setValue("Senior", this.getTargetSeniorPercent());
-	  target_data.setValue("Youth", this.getTargetYouthPercent());
-	  target_data.setValue("Child", this.getTargetChildPercent());
+	  target_data.setValue("Referred", this.getTemplateData().get(0));
+	  target_data.setValue("Recieved", this.getTemplateData().get(1));
 	  return target_data;
-  }
+  }*/
 
-  
+  private List<Double> getTemplateData() {
+	  Reports report = new Reports(dataTable);
+	  double referred = 0;
+	  double recieved = 0;
+	  List<Double> data = new ArrayList<>();
+	  if (templateNameText.getText().equalsIgnoreCase("Information and Orientation")) {
+		  referred = report.getNonEmptyCellCount("service_referred_by_id");
+		  recieved = report.getNonEmptyCellCount("orientation_service_id");
+	  
+	  } else if (templateNameText.getText().equalsIgnoreCase("Needs Assessment and Referrals Service")){
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("support_received_ind");
+		  
+	  } else if (templateNameText.getText().equalsIgnoreCase("Community Connections")) {
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("community_service_id");
+		  
+	  } else if (templateNameText.getText().equalsIgnoreCase("Employment Related Services")) {
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("support_received_ind");
+	  }
+	  System.out.println("recieved percent: " + recieved);
+	  System.out.println("ref percent: " + referred);
+	  data.add(referred);
+	  data.add(recieved);
+	  
+	  return data;
+  }
 
   @FXML
-  private void generateReport() {
-		System.out.println(this.getTargetChildPercent());
+  private void generateReport() throws IOException {
 
-	PieChart_AWT pie = new PieChart_AWT();
-	pie.createPiechart(this.createDataset());
-	//FileChooser chooser = new FileChooser();
-//    chooser.setTitle("Save Report File");
-//    chooser.setInitialFileName("*.pdf");
-//    chooser.getExtensionFilters().addAll(new ExtensionFilter("PDF Files (.pdf)", "*.pdf"));
-//    File selectedFile = chooser.showSaveDialog(mainApp.getPrimaryStage());
-//    if (selectedFile != null) {
-//      // TODO: generate HTML
-//      //String path = (selectedFile.getAbsolutePath());
-//      Document document;
-//      String pathURL;
-//      try {
-//        pathURL = getClass().getClassLoader().getResource("report.html").toString();
-//        document = ReportUtil.html5ParseDocument(pathURL, 0);
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//        document = null;
-//        pathURL = null;
-//      }
-//      if (document != null) {
-//        try (OutputStream os = new FileOutputStream(selectedFile)) {
-//          PdfRendererBuilder builder = new PdfRendererBuilder();
-//          builder.withW3cDocument(document, pathURL);
-//          builder.toStream(os);
-//          builder.run();
-//        } catch (Exception e) {
-//          e.printStackTrace();
-//        }
-//      }
-//      try {
-//        PDDocument doc = PDDocument.load(selectedFile);
-//        doc.removePage(doc.getNumberOfPages() - 1);
-//        doc.save(selectedFile);
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-    //}
+	//PieChart_AWT pie = new PieChart_AWT();
+	  DoubleBarGraph bar = new DoubleBarGraph();
+	bar.createChart(this.createDataset(), templateNameText.getText());
+	FileChooser chooser = new FileChooser();
+    chooser.setTitle("Save Report File");
+    chooser.setInitialFileName("*.pdf");
+    chooser.getExtensionFilters().addAll(new ExtensionFilter("PDF Files (.pdf)", "*.pdf"));
+    File selectedFile = chooser.showSaveDialog(mainApp.getPrimaryStage());
+    if (selectedFile != null) {
+      // TODO: generate HTML
+      String path = (selectedFile.getAbsolutePath());
+      Document document;
+      String pathURL;
+      try {
+        pathURL = getClass().getClassLoader().getResource("report.html").toString();
+        document = ReportUtil.html5ParseDocument(pathURL, 0);
+      } catch (IOException e) {
+        e.printStackTrace();
+        document = null;
+        pathURL = null;
+      }
+      if (document != null) {
+        try (OutputStream os = new FileOutputStream(selectedFile)) {
+          PdfRendererBuilder builder = new PdfRendererBuilder();
+          builder.withW3cDocument(document, pathURL);
+          builder.toStream(os);
+          builder.run();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+      try {
+        PDDocument doc = PDDocument.load(selectedFile);
+        doc.removePage(doc.getNumberOfPages() - 1);
+        doc.save(selectedFile);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public void setMainApp(App mainApp) {

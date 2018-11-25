@@ -29,6 +29,8 @@ import com.nineplusten.app.service.TemplateDataRetrievalService;
 import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
+import j2html.tags.ContainerTag;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -79,8 +81,6 @@ public class DataViewController {
   }
 
   private String generateHTML() {
-	  ObservableList<TableColumn<TemplateData,?>> cols = dataTable.getColumns();
-	   Callback<TableView<TemplateData>, TableRow<TemplateData>> rows = dataTable.getRowFactory();
 	  String header = "<!DOCTYPE html>\n" + 
 	  		"<html>\n" + 
 	  		"\n" + 
@@ -102,8 +102,29 @@ public class DataViewController {
 	  		+ "</body>"
 	  		+ "</html>";
 	  String html = header + body + table;
+		    
 	  return html;
 	  
+  }
+  
+  private void generatej2html() {
+	 ContainerTag html =  html(
+			    head(
+			        title("ICARE Reports"),
+			        link().withRel("stylesheet").withHref("styles.css")
+			    ),
+			    body(
+			    	div(attrs(".header")).with(
+			            h1(templateNameText.getText()).withClass("title")
+			    			),
+			    	div(attrs(".template")).with(
+				            h2(templateNameText.getText() + "'s Reffered vs Recieved").withClass("heading")
+				    			),
+			    	div(attrs(".graphic-data")).with(img().withSrc("src/main/resources/barChart.png").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+			    )
+			);
+	 
+	 System.out.println(html.render());
   }
   
   	private CategoryDataset createDataset() {
@@ -156,7 +177,7 @@ public class DataViewController {
 
   @FXML
   private void generateReport() throws IOException {
-
+	this.generatej2html();
 	PieChart_AWT pie = new PieChart_AWT();
 	pie.createPieChart(this.getAgeReports());
 	DoubleBarGraph bar = new DoubleBarGraph();

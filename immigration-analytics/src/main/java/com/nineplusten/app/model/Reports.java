@@ -8,6 +8,12 @@ import javafx.scene.control.TableView;
 public class Reports {
 	
 	private TableView<TemplateData> dataTable;
+	
+	private List<Double> childEntries = new ArrayList<Double>();
+	private List<Double> youthEntries = new ArrayList<Double>();
+	private List<Double> seniorEntries = new ArrayList<Double>();
+	private List<Double> adultEntries = new ArrayList<Double>();
+	
 	public Reports(TableView<TemplateData> dataTable) {
 		this.dataTable = dataTable;
 	}
@@ -25,9 +31,10 @@ public class Reports {
 		    rowCount.add(values);
 		    
 		   return rowCount;
-	  }
-	  
-	  private double getTargetChildPercent() {
+	}
+	
+	
+	  public double getTargetChildPercent() {
 		  double total_rows = (Integer) getValuesforColumn("target_group_children_ind").get(0);
 		  System.out.println("total rows" + total_rows);
 		  List<String> target_child = (List<String>) getValuesforColumn("target_group_children_ind").get(1);
@@ -44,10 +51,9 @@ public class Reports {
 		  System.out.println("percent hin child " + child_percent_decimal);
 
 		  return child_percent;
-		  
 	  }
 	  
-	  private double getTargetYouthPercent() {
+	  public double getTargetYouthPercent() {
 		  double total_rows = (Integer) getValuesforColumn("target_group_youth_ind").get(0);
 		  List<String> target_youth = (List<String>) getValuesforColumn("target_group_youth_ind").get(1);
 		  int i = 0;
@@ -61,7 +67,7 @@ public class Reports {
 		  return youth_percent;
 		  
 	  }
-	  private double getTargetSeniorPercent() {
+	  public double getTargetSeniorPercent() {
 		  double total_rows = (Integer) getValuesforColumn("target_group_senior_ind").get(0);
 		  List<String> target_senior = (List<String>) getValuesforColumn("target_group_senior_ind").get(1);
 		  int i = 0;

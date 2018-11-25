@@ -121,7 +121,7 @@ public class DataViewController {
   /*private DefaultPieDataset createPieDataset() {
 	  DefaultPieDataset target_data = new DefaultPieDataset();
 	  target_data.setValue("Referred", this.getTemplateData().get(0));
-	  target_data.setValue("Recieved", this.getTemplateData().get(1));
+	  target_data.setValue("Received", this.getTemplateData().get(1));
 	  return target_data;
   }*/
 
@@ -157,8 +157,9 @@ public class DataViewController {
   @FXML
   private void generateReport() throws IOException {
 
-	//PieChart_AWT pie = new PieChart_AWT();
-	  DoubleBarGraph bar = new DoubleBarGraph();
+	PieChart_AWT pie = new PieChart_AWT();
+	pie.createPieChart(this.getAgeReports());
+	DoubleBarGraph bar = new DoubleBarGraph();
 	bar.createChart(this.createDataset(), templateNameText.getText());
 	FileChooser chooser = new FileChooser();
     chooser.setTitle("Save Report File");
@@ -196,6 +197,21 @@ public class DataViewController {
         e.printStackTrace();
       }
     }
+  }
+  
+  public DefaultPieDataset getAgeReports() {
+	  Reports report = new Reports(dataTable);
+	  double childAmount = report.getTargetChildPercent();
+	  double seniorAmount = report.getTargetSeniorPercent();
+	  double youthAmount = report.getTargetYouthPercent();
+	  double adultAmount = 100 - (childAmount + seniorAmount + youthAmount);
+	  
+	  DefaultPieDataset target_data = new DefaultPieDataset();
+	  target_data.setValue("Children (0 - 14 yrs)", childAmount);
+	  target_data.setValue("Youth (15 - 24 yrs)", youthAmount);
+	  target_data.setValue("Adult (25 - 64 yrs)", adultAmount);
+	  target_data.setValue("Senior (65+ yrs)", seniorAmount);
+	  return target_data;
   }
 
   public void setMainApp(App mainApp) {

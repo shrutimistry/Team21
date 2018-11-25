@@ -1,5 +1,7 @@
 package com.nineplusten.app.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
@@ -8,6 +10,7 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
@@ -21,8 +24,9 @@ public class PieChart_AWT  {
      * The starting point for the demo.
      *
      * @param args ignored.
+	 * @throws IOException 
      */
-    public void createPiechart(PieDataset data) {
+    public void createPieChart(PieDataset data) throws IOException {
     	// create a dataset...
 //        DefaultPieDataset data = new DefaultPieDataset();
 //        data.setValue("Category 1", 43.2);
@@ -40,10 +44,16 @@ public class PieChart_AWT  {
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
                 "{0}: {1} ({2})", new DecimalFormat("0"), new DecimalFormat("0%"));
             plot.setLabelGenerator(gen);
-        // create and display a frame...
+        
+        int width = 640;    /* Width of the image */
+        int height = 480;   /* Height of the image */ 
+        File pieChart = new File( "pieChart.png" ); 
+        ChartUtils.saveChartAsJPEG(pieChart ,chart, width ,height);
+
+        /* create and display a frame...
         ChartFrame frame = new ChartFrame("First", chart);
         frame.pack();
-        frame.setVisible(true);
+        frame.setVisible(true);*/
     }
 
 }

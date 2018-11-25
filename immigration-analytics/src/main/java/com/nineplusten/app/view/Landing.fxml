@@ -39,6 +39,11 @@
             <fx:include fx:id="dataView" source="DataViewer.fxml" />
           </content>
       </Tab>
+      <Tab text="Query Tool">
+          <content>
+            <fx:include fx:id="queryView" source="QueryView.fxml" />
+          </content>
+      </Tab>
       <Tab text="Account Management">
           <content>
             <fx:include fx:id="accountManagement" source="AccountManagementTab.fxml" />

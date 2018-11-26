@@ -1,10 +1,9 @@
 package com.nineplusten.app.service;
 
+import org.json.JSONObject;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nineplusten.app.model.Agency;
-import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.util.QueryUtil;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -12,17 +11,14 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class TemplateDataRetrievalService extends Service<ObservableList<TemplateData>> {
-  private ReadOnlyObjectProperty<Agency> agency;
-  private ReadOnlyObjectProperty<Template> template;
+public class QueryService extends Service<ObservableList<TemplateData>> {
+  private ReadOnlyObjectProperty<JSONObject> query;
   private Gson gson;
 
-  public TemplateDataRetrievalService(ReadOnlyObjectProperty<Agency> agency,
-      ReadOnlyObjectProperty<Template> template) {
+  public QueryService(ReadOnlyObjectProperty<JSONObject> query) {
     gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .excludeFieldsWithoutExposeAnnotation().create();
-    this.agency = agency;
-    this.template = template;
+    this.query = query;
   }
 
   @Override
@@ -30,8 +26,7 @@ public class TemplateDataRetrievalService extends Service<ObservableList<Templat
     return new Task<ObservableList<TemplateData>>() {
       @Override
       protected ObservableList<TemplateData> call() throws Exception {
-        ObservableList<TemplateData> templateData =
-            QueryUtil.fetchTemplateData(gson, template.get(), agency.get());
+        ObservableList<TemplateData> templateData = QueryUtil.fetchTemplateData(gson, query.get());
         return templateData;
       }
     };

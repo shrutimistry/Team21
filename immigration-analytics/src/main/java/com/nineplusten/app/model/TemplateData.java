@@ -1,5 +1,7 @@
 package com.nineplusten.app.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import com.google.gson.annotations.Expose;
@@ -13,15 +15,16 @@ public class TemplateData {
   private Map<String, String> fieldData;
   @Expose(deserialize = false)
   private Template template;
-  @Expose(deserialize = false)
-  private Agency agency;
+  @Expose()
+  private List<Agency> agency;
 
   public TemplateData(Template template, Agency agency, String clientId,
       Map<String, String> fieldData) {
     this.clientId = clientId;
     this.fieldData = fieldData;
     this.template = template;
-    this.agency = agency;
+    this.agency = new ArrayList<>();
+    this.agency.add(agency);
   }
 
   public TemplateData(Map<String, String> fieldData) {
@@ -61,11 +64,16 @@ public class TemplateData {
   }
 
   public Agency getAgency() {
-    return agency;
+    return agency != null ? agency.get(0) : null;
   }
 
   public void setAgency(Agency agency) {
-    this.agency = agency;
+    if (this.agency != null) {
+      this.agency.set(0, agency);
+    } else {
+      this.agency = new ArrayList<Agency>();
+      this.agency.add(agency);
+    }
   }
   
   @Override

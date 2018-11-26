@@ -97,7 +97,6 @@ public class DataViewController {
   }
 
   private void configureTable() {
-    dataTable.getColumns().clear();
     List<TableColumn<TemplateData, String>> tableColumns =
         templateSelector.getValue().getColumns().entrySet().stream().map(e -> {
           TableColumn<TemplateData, String> column = new TableColumn<>(e.getValue());
@@ -107,6 +106,6 @@ public class DataViewController {
               cellData.getValue().getFieldData().get(e.getKey())));
           return column;
         }).collect(Collectors.toList());
-    dataTable.getColumns().addAll(tableColumns);
+    dataTable.getColumns().setAll(tableColumns);
   }
 }

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -38,61 +39,61 @@
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <TableView prefWidth="168.0">
+                              <TableView fx:id="agencySelectorTable" prefWidth="168.0">
                                 <columns>
-                                  <TableColumn editable="false" prefWidth="29.0" sortable="false">
+                                  <TableColumn fx:id="agencySelectedColumn" editable="false" prefWidth="29.0" sortable="false">
                                   	<graphic>
-                                  		<CheckBox fx:id="selectAllAgencies" mnemonicParsing="false" />
+                                  		<CheckBox fx:id="selectAllAgencies" mnemonicParsing="false" onAction="#selectAllAction" />
                                   	</graphic>
                                   </TableColumn>
-                                  <TableColumn prefWidth="181.00003051757812" text="Agency" />
+                                  <TableColumn fx:id="agencyName" minWidth="180.0" prefWidth="-1.0" text="Agency" />
                                 </columns>
                               </TableView>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="151.0" prefWidth="211.0" spacing="10.0">
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="167.0" prefWidth="367.0" spacing="10.0">
                            <children>
                               <Label text="2. Select Templates">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <TableView prefWidth="168.0">
+                              <TableView fx:id="templateSelectorTable" prefWidth="168.0">
                                  <columns>
-                                    <TableColumn editable="false" prefWidth="29.0" sortable="false">
-                                    <graphic>
-                                  		<CheckBox fx:id="selectAllTemplates" mnemonicParsing="false" />
-                                  	</graphic>
-                                    </TableColumn>
-                                    <TableColumn prefWidth="181.0" text="Template" />
+                                    <TableColumn fx:id="templateSelectedColumn" editable="false" prefWidth="29.0" sortable="false" />
+                                    <TableColumn fx:id="templateName" minWidth="337.0" prefWidth="-1.0" text="Template" />
                                  </columns>
                               </TableView>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="167.0" prefWidth="478.0" spacing="10.0">
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="167.0" prefWidth="323.0" spacing="10.0">
                            <children>
                               <Label text="3. Filter Columns">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <TableView prefWidth="168.0">
+                              <TableView fx:id="columnSelectorTable" prefWidth="168.0">
                                  <columns>
-                                    <TableColumn editable="false" prefWidth="29.0" sortable="false">
+                                    <TableColumn fx:id="columnSelectedColumn" editable="false" prefWidth="29.0" sortable="false">
                                     <graphic>
-                                  		<CheckBox fx:id="selectAllColumns" mnemonicParsing="false" />
+                                  		<CheckBox fx:id="selectAllColumns" mnemonicParsing="false" onAction="#selectAllAction" />
                                   	</graphic>
                                     </TableColumn>
-                                    <TableColumn prefWidth="155.00003051757812" text="Template" />
-                                    <TableColumn prefWidth="152.0" text="Column Name" />
-                                    <TableColumn prefWidth="140.0" text="Column ID" />
+                                    <TableColumn fx:id="columnName" minWidth="152.0" prefWidth="-1.0" text="Column Name" />
+                                    <TableColumn fx:id="columnId" minWidth="140.0" prefWidth="-1.0" text="Column ID" />
                                  </columns>
                               </TableView>
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" text="Execute Query" />
+                  <HBox spacing="20.0">
+                     <children>
+                        <Button fx:id="queryButton" mnemonicParsing="false" onAction="#executeQuery" text="Execute Query" />
+                        <ProgressBar fx:id="queryRunningIndicator" maxHeight="1.7976931348623157E308" prefWidth="200.0" visible="false" />
+                     </children>
+                  </HBox>
                   <VBox fx:id="queryContainer" spacing="10.0">
                      <VBox.margin>
                         <Insets bottom="10.0" top="10.0" />
@@ -116,7 +117,7 @@
                               </VBox>
                            </children>
                         </AnchorPane>
-                        <Button mnemonicParsing="false" onAction="#generateReport" text="Generate Report" />
+                        <Button fx:id="generateReportButton" mnemonicParsing="false" onAction="#generateReport" text="Generate Report" />
                      </children>
                      <padding>
                         <Insets bottom="20.0" top="20.0" />

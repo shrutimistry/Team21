@@ -43,8 +43,9 @@ public class DoubleBarGraph {
 
         int width = 640;    /* Width of the image */
         int height = 480;   /* Height of the image */ 
-        File barChart = new File( "barChart.png" ); 
+        File barChart = new File( "reports/barChart.png" ); 
         ChartUtils.saveChartAsJPEG(barChart ,chart, width ,height);
+       
 
 //        ChartFrame frame = new ChartFrame("First", chart);
 //        frame.pack();

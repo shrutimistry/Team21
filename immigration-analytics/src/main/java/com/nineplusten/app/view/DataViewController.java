@@ -1,8 +1,10 @@
 package com.nineplusten.app.view;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -107,7 +109,7 @@ public class DataViewController {
 	  
   }
   
-  private void generatej2html() {
+  private void generatej2html() throws IOException {
 	 ContainerTag html =  html(
 			    head(
 			        title("ICARE Reports"),
@@ -120,12 +122,16 @@ public class DataViewController {
 			    	div(attrs(".template")).with(
 				            h2(templateNameText.getText() + "'s Reffered vs Recieved").withClass("heading")
 				    			),
-			    	div(attrs(".graphic-data")).with(img().withSrc("src/main/resources/barChart.png").withAlt("Bar Chart portryaing Services Recieved and Referred"))
-			    	//div(attrs(".graphic-data")).with(img().withSrc("src/main/resources/pieChart.png").withAlt("Pie Chart illustrating the various age groups represented in the service"))
+			    	div(attrs(".graphic-data")).with(img().withSrc("reports/barChart.png").withAlt("Bar Chart portryaing Services Recieved and Referred")),
+			    	div(attrs(".graphic-data")).with(img().withSrc("reports/pieChart.png").withAlt("Pie Chart illustrating the various age groups represented in the service"))
 			    )
 			);
 	 
 	 System.out.println(html.render());
+	 
+	 BufferedWriter writer = new BufferedWriter(new FileWriter("reports/report.html"));
+	 writer.write(html.render());
+	 writer.close();
   }
   
   	private CategoryDataset createDataset() {
@@ -178,11 +184,11 @@ public class DataViewController {
 
   @FXML
   private void generateReport() throws IOException {
-	this.generatej2html();
 	PieChart_AWT pie = new PieChart_AWT();
 	pie.createPieChart(this.getAgeReports());
 	DoubleBarGraph bar = new DoubleBarGraph();
 	bar.createChart(this.createDataset(), templateNameText.getText());
+	this.generatej2html();
 	FileChooser chooser = new FileChooser();
     chooser.setTitle("Save Report File");
     chooser.setInitialFileName("*.pdf");
@@ -194,7 +200,7 @@ public class DataViewController {
       Document document;
       String pathURL;
       try {
-        pathURL = getClass().getClassLoader().getResource("report.html").toString();
+        pathURL = "reports/report.html";
         document = ReportUtil.html5ParseDocument(pathURL, 0);
       } catch (IOException e) {
         e.printStackTrace();

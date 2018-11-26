@@ -47,7 +47,8 @@ public class PieChart_AWT  {
         
         int width = 640;    /* Width of the image */
         int height = 480;   /* Height of the image */ 
-        File pieChart = new File( "pieChart.png" ); 
+        File pieChart = new File("reports/pieChart.png");
+        pieChart.createNewFile();
         ChartUtils.saveChartAsJPEG(pieChart ,chart, width ,height);
 
         /* create and display a frame...

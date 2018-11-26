@@ -51,7 +51,8 @@ public class Reports {
 		  for (i = 0; i < rowNums.size(); i++) {
 			  
 			  String year = rowNums.get(i).substring(rowNums.get(i).length() - 2);
-			  if (Integer.parseInt(year) <= 99 && Integer.parseInt(year) >= today.getYear()) {
+			  System.out.println(today.getYear());
+			  if (Integer.parseInt(year) <= 99 && Integer.parseInt(year) >= (today.getYear() - 2000)) {
 				  year = "19" + year;
 			  }
 			  else {

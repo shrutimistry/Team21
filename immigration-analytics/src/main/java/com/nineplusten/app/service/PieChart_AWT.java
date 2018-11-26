@@ -27,18 +27,13 @@ public class PieChart_AWT  {
 	 * @throws IOException 
      */
     public void createPieChart(PieDataset data) throws IOException {
-    	// create a dataset...
-//        DefaultPieDataset data = new DefaultPieDataset();
-//        data.setValue("Category 1", 43.2);
-//        data.setValue("Category 2", 27.9);
-//        data.setValue("Category 3", 79.5);
-        // create a dataset...
+
         JFreeChart chart = ChartFactory.createPieChart(
             "Age Distribution",
             data,
-            true, // legend?
-            true, // tooltips?
-            false // URLs?
+            true, // legend
+            true, // tooltips
+            false // URLs
         );
         PiePlot plot = (PiePlot) chart.getPlot();
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
@@ -51,10 +46,6 @@ public class PieChart_AWT  {
         pieChart.createNewFile();
         ChartUtils.saveChartAsJPEG(pieChart ,chart, width ,height);
 
-        /* create and display a frame...
-        ChartFrame frame = new ChartFrame("First", chart);
-        frame.pack();
-        frame.setVisible(true);*/
     }
 
 }

@@ -3,6 +3,12 @@ package com.nineplusten.app.view;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.UserRole;
 import com.nineplusten.app.service.CreateUserService;
+import com.nineplusten.app.util.AnimationUtil;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +20,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 public class AccountCreationController {
 
@@ -38,6 +46,10 @@ public class AccountCreationController {
   private Button clearButton;
   @FXML
   private ProgressIndicator submitProgress;
+  @FXML
+  private HBox messageContainer;
+  @FXML
+  private Label messageText;
 
   private CreateUserService create;
 
@@ -51,6 +63,7 @@ public class AccountCreationController {
   @FXML
   private void submitButtonAction(ActionEvent action) {
     // checks status of the user accounts service
+    messageContainer.setVisible(false);
     if (!create.isRunning()) {
       create.restart();
     }
@@ -99,6 +112,18 @@ public class AccountCreationController {
       @Override
       public void handle(WorkerStateEvent event) {
         clearForm();
+        if (create.getValue()) {
+          messageContainer.getStyleClass().remove("alert-box-fail");
+          messageContainer.getStyleClass().add("alert-box-success");
+          messageText.setText("Account created successfully.");
+        } else {
+          messageContainer.getStyleClass().remove("alert-box-success");
+          messageContainer.getStyleClass().add("alert-box-fail");
+          messageText.setText("Failed to create account. Please verify your input.");
+        }
+        messageContainer.setVisible(true);
+        
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
     create.setOnFailed(new EventHandler<WorkerStateEvent>() {

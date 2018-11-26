@@ -6,7 +6,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" stylesheets="landingStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.LandingController">
    <children>
@@ -66,9 +65,6 @@
                   <Image url="key_14_0_000000_none.png" />
                </image>
             </ImageView>
-         </graphic>
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font></Button>
+         </graphic></Button>
    </children>
 </AnchorPane>

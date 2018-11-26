@@ -13,7 +13,9 @@ import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.service.LoadExcelService;
 import com.nineplusten.app.service.SubmitDataService;
+import com.nineplusten.app.util.AnimationUtil;
 import com.nineplusten.app.util.TextUtil;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -33,6 +35,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.FileChooser;
@@ -58,6 +61,10 @@ public class DataEntryViewController {
   private Button submitButton;
   @FXML
   private Button downloadButton;
+  @FXML
+  private HBox messageContainer;
+  @FXML
+  private Label messageText;
 
   private DataUploadModel dataModel;
   private LoadExcelService loadExcelService;
@@ -186,12 +193,34 @@ public class DataEntryViewController {
     submitDataService = new SubmitDataService(dataModel.excelDataProperty(),
         mainApp.getSession().getUser().getAgency(), templateSelector.valueProperty());
 
+    submitDataService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+      @Override
+      public void handle(WorkerStateEvent event) {
+        if (submitDataService.getValue()) {
+          messageContainer.getStyleClass().remove("alert-box-fail");
+          messageContainer.getStyleClass().add("alert-box-success");
+          messageText.setText("Data uploaded successfully.");
+        } else {
+          messageContainer.getStyleClass().remove("alert-box-success");
+          messageContainer.getStyleClass().add("alert-box-fail");
+          messageText.setText("Failed to upload data.");
+        }
+        messageContainer.setVisible(true);
+
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
+      }
+    });
     submitDataService.setOnFailed(new EventHandler<WorkerStateEvent>() {
       @Override
       public void handle(WorkerStateEvent event) {
         // DEBUG
         Throwable throwable = submitDataService.getException();
         throwable.printStackTrace();
+        messageContainer.getStyleClass().remove("alert-box-success");
+        messageContainer.getStyleClass().add("alert-box-fail");
+        messageText.setText("Failed to upload data.");
+        messageContainer.setVisible(true);
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
     submitIndicator.visibleProperty().bind(submitDataService.runningProperty());

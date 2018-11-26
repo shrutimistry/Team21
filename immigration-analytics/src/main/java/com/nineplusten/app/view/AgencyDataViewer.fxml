@@ -58,6 +58,7 @@
                                  </font>
                               </Label>
                               <Button fx:id="editButton" mnemonicParsing="false" onAction="#edit" text="Edit" />
+                              <Button fx:id="refreshButton" layoutX="213.0" layoutY="12.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
                            </children>
                         </HBox>
                         <AnchorPane>
@@ -80,6 +81,14 @@
                               <Button fx:id="saveButton" defaultButton="true" mnemonicParsing="false" onAction="#save" prefHeight="26.0" text="Save" ButtonBar.buttonData="RIGHT" />
                            </buttons>
                         </ButtonBar>
+                        <HBox fx:id="messageContainer" alignment="CENTER" visible="false">
+                           <children>
+                              <Label fx:id="messageText" text="Message text" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="200.0" right="200.0" />
+                           </VBox.margin>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets bottom="20.0" top="20.0" />

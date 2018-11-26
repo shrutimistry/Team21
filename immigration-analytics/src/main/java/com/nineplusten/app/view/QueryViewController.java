@@ -138,7 +138,6 @@ public class QueryViewController {
     columnName.setCellValueFactory(cellData -> cellData.getValue().columnNameProperty());
     columnId.setCellValueFactory(cellData -> cellData.getValue().columnIdProperty());
     columnSelectorTable.setPlaceholder(new Label("No templates selected"));
-
     startListeners();
   }
 
@@ -181,7 +180,7 @@ public class QueryViewController {
       Document document;
       String pathURL;
       try {
-        pathURL = getClass().getClassLoader().getResource("report.html").toString();
+        pathURL = new File("report-folder/my_generated_html").toURI().toURL().toString();
         document = ReportUtil.html5ParseDocument(pathURL, 0);
       } catch (IOException e) {
         e.printStackTrace();

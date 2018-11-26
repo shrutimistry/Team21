@@ -3,59 +3,68 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.LandingController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" stylesheets="landingStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nineplusten.app.view.LandingController">
    <children>
       <TabPane fx:id="tabBar" layoutX="14.0" layoutY="14.0" prefHeight="278.0" prefWidth="698.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-        <Tab text="My Account">
+        <Tab id="myAccountTab" text="My Account">
           <content>
             <fx:include fx:id="accountInfo" source="AccountInfoTab.fxml" />
           </content>
 			</Tab>
-      <Tab text="Account Creation">
+      <Tab id="accountCreationTab" text="Account Creation">
           <content>
             <fx:include source="AccountCreationTab.fxml" />
           </content>
       </Tab>
-      <Tab text="Template Editor">
+      <Tab id="templateEditorTab" text="Template Editor">
           <content>
             <fx:include fx:id="templateCreation" source="TemplateEditor.fxml" />
           </content>
       </Tab>
-      <Tab text="Template Browser">
+      <Tab id="templateBrowserTab" text="Template Browser">
           <content>
             <fx:include fx:id="templateView" source="TemplateViewer.fxml" />
           </content>
       </Tab>
-      <Tab text="Upload Data">
+      <Tab id="uploadDataTab" text="Upload Data">
           <content>
             <fx:include fx:id="dataEntry" source="DataEntryUpload.fxml" />
           </content>
       </Tab>
-      <Tab text="Data Browser">
+      <Tab id="dataBrowserTab" text="Data Browser">
           <content>
             <fx:include fx:id="dataView" source="DataViewer.fxml" />
           </content>
       </Tab>
-      <Tab text="Query Tool">
+      <Tab id="queryToolTab" text="Query Tool">
           <content>
             <fx:include fx:id="queryView" source="QueryView.fxml" />
           </content>
       </Tab>
-      <Tab text="Account Management">
+      <Tab id="accountManagementTab" text="Account Management">
           <content>
             <fx:include fx:id="accountManagement" source="AccountManagementTab.fxml" />
           </content>
       </Tab>
-      <Tab text="My Data">
+      <Tab id="myDataTab" text="My Data">
           <content>
             <fx:include fx:id="agencyDataView" source="AgencyDataViewer.fxml" />
           </content>
       </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="1128.0" layoutY="3.0" mnemonicParsing="false" onAction="#logout" text="Logout" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="3.0" />
+      <Button layoutX="1128.0" layoutY="3.0" mnemonicParsing="false" onAction="#logout" text="Logout" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="3.0">
+         <graphic>
+            <ImageView fitHeight="14.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="key_14_0_000000_none.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
    </children>
 </AnchorPane>

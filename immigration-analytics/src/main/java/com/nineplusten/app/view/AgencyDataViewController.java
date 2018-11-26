@@ -10,7 +10,9 @@ import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.model.User;
 import com.nineplusten.app.service.ModifyDataService;
 import com.nineplusten.app.service.TemplateDataRetrievalService;
+import com.nineplusten.app.util.AnimationUtil;
 import com.nineplusten.app.util.TextUtil;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.WorkerStateEvent;
@@ -32,6 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class AgencyDataViewController {
@@ -51,6 +54,12 @@ public class AgencyDataViewController {
   private Button editButton;
   @FXML
   private Button saveButton;
+  @FXML
+  private Button refreshButton;
+  @FXML
+  private HBox messageContainer;
+  @FXML
+  private Label messageText;
 
   private TemplateDataRetrievalService dataService;
   // TODO initialize
@@ -73,6 +82,10 @@ public class AgencyDataViewController {
         new Image(getClass().getClassLoader().getResourceAsStream("edit_24_0_000000_none.png"));
     editButton.setText("");
     editButton.setGraphic(new ImageView(editImg));
+    Image refreshImg = new Image(getClass().getClassLoader().getResourceAsStream("refresh_24_0_000000_none.png"));
+    refreshButton.setText("");
+    refreshButton.setGraphic(new ImageView(refreshImg));
+        
   }
 
   public void initDataService(User user) {
@@ -85,6 +98,7 @@ public class AgencyDataViewController {
         .bind(dataService.runningProperty().or(modifyDataService.runningProperty()));
     dataServiceProgressIndicator.visibleProperty().bind(dataService.runningProperty());
     editButton.disableProperty().bind(dataService.runningProperty());
+    refreshButton.disableProperty().bind(dataService.runningProperty());
     editControls.disableProperty().bind(modifyDataService.runningProperty());
     configureListeners();
   }
@@ -94,6 +108,9 @@ public class AgencyDataViewController {
     templateNameText.textProperty().bind(templateSelector.valueProperty().asString());
     dataContainer.visibleProperty().bind(templateSelector.valueProperty().isNotNull());
     editButton.visibleProperty().bind(dataModel.editModeProperty().not());
+    refreshButton.visibleProperty().bind(dataModel.editModeProperty().not());
+    editButton.managedProperty().bind(editButton.visibleProperty());
+    refreshButton.managedProperty().bind(refreshButton.visibleProperty());
     editControls.visibleProperty().bind(dataModel.editModeProperty());
     saveButton.disableProperty().bind(dataModel.modifiedProperty().not());
   }
@@ -136,6 +153,17 @@ public class AgencyDataViewController {
       @Override
       public void handle(WorkerStateEvent event) {
         dataModel.setEditMode(false);
+        if (modifyDataService.getValue()) {
+          messageContainer.getStyleClass().remove("alert-box-fail");
+          messageContainer.getStyleClass().add("alert-box-success");
+          messageText.setText("Data saved successfully.");
+        } else {
+          messageContainer.getStyleClass().remove("alert-box-success");
+          messageContainer.getStyleClass().add("alert-box-fail");
+          messageText.setText("Failed to save data.");
+        }
+        messageContainer.setVisible(true);
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
     modifyDataService.setOnFailed(new EventHandler<WorkerStateEvent>() {
@@ -144,6 +172,11 @@ public class AgencyDataViewController {
         // DEBUG
         Throwable throwable = modifyDataService.getException();
         throwable.printStackTrace();
+        messageContainer.getStyleClass().remove("alert-box-success");
+        messageContainer.getStyleClass().add("alert-box-fail");
+        messageText.setText("Failed to save data.");
+        messageContainer.setVisible(true);
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
 
@@ -174,6 +207,13 @@ public class AgencyDataViewController {
   @FXML
   private void discard() {
     dataService.restart();
+  }
+  
+  @FXML
+  private void refresh() {
+    if (!dataService.isRunning()) {
+      dataService.restart();
+    }
   }
   
   @FXML

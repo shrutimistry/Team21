@@ -1,15 +1,42 @@
 package com.nineplusten.app.view;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+
+import static j2html.TagCreator.*;
+import org.w3c.dom.Document;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
+import com.nineplusten.app.model.Reports;
 import com.nineplusten.app.model.Template;
 import com.nineplusten.app.model.TemplateData;
+import com.nineplusten.app.service.DoubleBarGraph;
+import com.nineplusten.app.service.PieChart_AWT;
 import com.nineplusten.app.service.TemplateDataRetrievalService;
+import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
+import j2html.tags.ContainerTag;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,8 +44,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.util.Callback;
 
 public class DataViewController {
   @FXML
@@ -43,6 +74,7 @@ public class DataViewController {
   @SuppressWarnings("unused")
   private App mainApp;
 
+
   @FXML
   private void initialize() {
     agencySelector.getItems().addAll(Cache.agencies);
@@ -53,8 +85,7 @@ public class DataViewController {
     configureBindings();
     configureListeners();
   }
-
-
+  
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
   }

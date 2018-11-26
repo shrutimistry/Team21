@@ -1,28 +1,53 @@
 package com.nineplusten.app.view;
 
+import static j2html.TagCreator.*;
+import j2html.tags.ContainerTag;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Document;
+
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.QueryViewModel;
+import com.nineplusten.app.model.Reports;
 import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.model.query.AgencyQueryChoice;
 import com.nineplusten.app.model.query.ColumnQueryChoice;
 import com.nineplusten.app.model.query.TemplateQueryChoice;
+import com.nineplusten.app.service.DoubleBarGraph;
+import com.nineplusten.app.service.PieChart_AWT;
 import com.nineplusten.app.service.QueryService;
 import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+
+import j2html.tags.ContainerTag;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -39,6 +64,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+
 
 public class QueryViewController {
   @FXML
@@ -164,11 +190,167 @@ public class QueryViewController {
     if (!queryService.isRunning()) {
       queryService.restart();
     }
+
+  }
+
+  private List<Double> getTemplateData() {
+	  Reports report = new Reports(dataTable);
+	  double referred = 0;
+	  double recieved = 0;
+	  List<Double> data = new ArrayList<>();
+	  Map<String, String> columnIdName = columnSelectorTable.getItems().stream().filter(ColumnQueryChoice::isSelected).collect(
+			  Collectors.toMap(ColumnQueryChoice::getColumnId, ColumnQueryChoice::getColumnName));
+	  if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("support_received_ind")) {
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("support_received_ind");
+	  }
+	  if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("community_service_id")) {
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("community_service_id");
+	  }
+	  if(columnIdName.containsKey("service_referred_by_id") && columnIdName.containsKey("orientation_service_id")) {
+		  referred = report.getNonEmptyCellCount("service_referred_by_id");
+		  recieved = report.getNonEmptyCellCount("orientation_service_id");
+	  }
+
+	  data.add(referred * 100);
+	  data.add(recieved * 100);
+
+	  return data;
+  }
+
+  private DefaultCategoryDataset serviceAccessedTrends() {
+
+    List<String> servicesReceived = new ArrayList<>();
+
+    TreeMap<Date, String> dateSizeMap = new TreeMap<>();
+
+    TableColumn<TemplateData, ?> srColumn = new TableColumn<>();
+    TableColumn<TemplateData, ?> sdColumn = new TableColumn<>();
+    TableColumn<TemplateData, ?> gsColumn = new TableColumn<>();
+
+    for (TableColumn<TemplateData, ?> column : dataTable.getColumns()) {
+      if (column.getText().equals("Services Received")) {
+        srColumn = column;
+      } else if (column.getText().equals("Start Date of Service (YYYY-MM-DD)")) {
+        sdColumn = column;
+      } else if (column.getText().equals("Number of Clients in Group")) {
+        gsColumn = column;
+      }
+    }
+
+    SimpleDateFormat templateDateFormatter = new SimpleDateFormat("MM/dd/yy");
+    SimpleDateFormat graphDateFormatter = new SimpleDateFormat("MMM yyyy");
+    for (TemplateData data : dataTable.getItems()) {
+      servicesReceived.add(srColumn.getCellData(data).toString());
+      try {
+        Date date = templateDateFormatter.parse(sdColumn.getCellData(data).toString());
+        dateSizeMap.put(date, gsColumn.getCellData(data).toString());
+      } catch (ParseException e) {
+        System.out.println("Date parse failed");
+      }
+    }
+
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    SortedSet<Date> dates = new TreeSet<>(dateSizeMap.keySet());
+    for (Date date : dates) {
+      String size = dateSizeMap.get(date);
+      dataset.addValue(Double.parseDouble(size), "clients", graphDateFormatter.format(date));
+    }
+
+    return dataset;
+
+  }
+
+  
+  private CategoryDataset createDataset() {
+      
+      final String series1 = "Referred";
+      final String series2 = "Recieved";
+
+      final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+      dataset.addValue(this.getTemplateData().get(0), "Percentage", series1);
+      dataset.addValue(this.getTemplateData().get(1), "Percentage", series2);
+      return dataset;
+      
+  }
+  
+  private String generatej2html() {
+
+	  ContainerTag html =  html(
+			  head(
+					  title("ICARE Reports"),
+					  link().withRel("stylesheet").withHref("styles.css")
+					  ),
+			  body(
+					  div(attrs(".header")).with(
+							  h1("iCare Reports").withClass("title")
+							  ),
+					  div(attrs(".template"),
+							  h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
+							  ,(img().withSrc("./reports/barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+							  ),
+					  div(attrs(".table-container"),(table().withClass(".table-data").with(
+							  tr().with(
+									  td().withText(
+											  "Refered: " + this.getTemplateData().get(0).toString() + "%"
+											  ),
+									  td().withText(
+											  "Recieved: " + this.getTemplateData().get(1).toString() + "%"
+											  )
+
+									  )
+							  ))),
+						div(attrs(".template"),
+								h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
+								,(img().withSrc("./reports/pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
+                ),
+            div(attrs(".template"),
+              h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading"),
+              (img().withSrc("./reports/LineChart.jpg").withClass(".graphic-data").withAlt("Line Chart portraying Number of Clients Receiving Services by Date")))
+						)
+				);
+			  
+
+	  return html.render();
+  }
+  
+  private void addHtmltoFile(String html) {
+  File file = new File("./reports/report.html");
+      FileWriter fr = null;
+      try {
+          fr = new FileWriter(file);
+          fr.write(html);
+      } catch (IOException e) {
+          e.printStackTrace();
+      }finally{
+          //close resources
+          try {
+              fr.close();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+  }
+
+  private void createLineChart() throws IOException{
+    JFreeChart lineChart = ChartFactory.createLineChart("Clients by Date", "Date of Service", "Number of Clients",
+    serviceAccessedTrends(), PlotOrientation.VERTICAL, true, true, false);
+    File lineChartFile = new File("./reports/LineChart.jpg");
+    ChartUtils.saveChartAsJPEG(lineChartFile, lineChart, 1500, 500);
   }
 
 
   @FXML
-  private void generateReport() {
+  private void generateReport() throws IOException {
+	PieChart_AWT pie = new PieChart_AWT();
+	pie.createPieChart(this.getAgeReports());
+	DoubleBarGraph bar = new DoubleBarGraph();
+    bar.createChart(this.createDataset(),"");
+    createLineChart();
+  	String html = this.generatej2html();
+  	this.addHtmltoFile(html);
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Save Report File");
     chooser.setInitialFileName("*.pdf");
@@ -180,7 +362,7 @@ public class QueryViewController {
       Document document;
       String pathURL;
       try {
-        pathURL = new File("report-folder/my_generated_html").toURI().toURL().toString();
+        pathURL = new File("reports/report.html").toURI().toURL().toString();
         document = ReportUtil.html5ParseDocument(pathURL, 0);
       } catch (IOException e) {
         e.printStackTrace();
@@ -198,6 +380,21 @@ public class QueryViewController {
         }
       }
     }
+  }
+  
+  public DefaultPieDataset getAgeReports() {
+	  Reports report = new Reports(dataTable);
+	  report.sortAges();
+	  double childAmount = report.getTargetChildPercent();
+	  double seniorAmount = report.getTargetSeniorPercent();
+	  double youthAmount = report.getTargetYouthPercent();
+	  double adultAmount = 100 - (childAmount + seniorAmount + youthAmount);
+	  DefaultPieDataset target_data = new DefaultPieDataset();
+	  target_data.setValue("Children (0 - 14 yrs)", childAmount);
+	  target_data.setValue("Youth (15 - 24 yrs)", youthAmount);
+	  target_data.setValue("Adult (25 - 64 yrs)", adultAmount);
+	  target_data.setValue("Senior (65+ yrs)", seniorAmount);
+	  return target_data;
   }
 
   private void startListeners() {

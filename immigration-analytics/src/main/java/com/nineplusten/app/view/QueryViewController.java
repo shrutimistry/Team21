@@ -164,7 +164,6 @@ public class QueryViewController {
     columnName.setCellValueFactory(cellData -> cellData.getValue().columnNameProperty());
     columnId.setCellValueFactory(cellData -> cellData.getValue().columnIdProperty());
     columnSelectorTable.setPlaceholder(new Label("No templates selected"));
-
     startListeners();
   }
 

@@ -22,7 +22,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import java.security.SecureRandom;
 
-public class CreateUserService extends Service<Void> {
+public class CreateUserService extends Service<Boolean> {
 
   private StringProperty agencyName;
   private StringProperty username;
@@ -42,13 +42,12 @@ public class CreateUserService extends Service<Void> {
   }
 
   @Override
-  protected Task<Void> createTask() {
-    return new Task<Void>() {
+  protected Task<Boolean> createTask() {
+    return new Task<Boolean>() {
       @Override
-      protected Void call() throws Exception {
+      protected Boolean call() throws Exception {
         // creates a user in the database
-        createUserInstance();
-        return null;
+        return createUserInstance();
       }
     };
 
@@ -58,7 +57,8 @@ public class CreateUserService extends Service<Void> {
    * Instantiates a new user object and JSON object and posts it onto the database
    * 
    */
-  public void createUserInstance() {
+  public boolean createUserInstance() {
+    boolean userCreated;
     gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .create();
 
@@ -86,11 +86,13 @@ public class CreateUserService extends Service<Void> {
 
     // post the JSON object into the database
     try {
-      RestDbIO.post(Routes.USERS, user_obj);
+      userCreated = RestDbIO.post(Routes.USERS, user_obj);
     } catch (UnirestException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      userCreated = false;
     }
+    return userCreated;
 
   }
 

@@ -85,7 +85,6 @@ public class DataViewController {
     configureBindings();
     configureListeners();
   }
-
   
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;

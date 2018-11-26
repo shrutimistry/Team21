@@ -77,6 +77,14 @@
                   <Insets top="20.0" />
                </padding>
             </VBox>
+            <HBox fx:id="messageContainer" alignment="CENTER" visible="false">
+               <children>
+                  <Label fx:id="messageText" text="Message text" />
+               </children>
+               <VBox.margin>
+                  <Insets left="200.0" right="200.0" />
+               </VBox.margin>
+            </HBox>
         </children>
          <padding>
             <Insets bottom="50.0" left="100.0" right="100.0" top="50.0" />

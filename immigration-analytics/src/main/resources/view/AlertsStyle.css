@@ -1,0 +1,20 @@
+.alert-box-success {
+    -fx-text-fill:#555;
+    -fx-border-radius:10px;
+    -fx-padding:10px 10px 10px 36px;
+    -fx-margin:10px;
+    -fx-background-color:#e9ffd9;
+    -fx-border-width:1px;
+    -fx-border-style:solid;
+    -fx-border-color:#a6ca8a;
+}
+.alert-box-fail {
+    -fx-text-fill:#555;
+    -fx-border-radius:10px;
+    -fx-padding:10px 10px 10px 36px;
+    -fx-margin:10px;
+    -fx-background-color:#ffecec;
+    -fx-border-width:1px;
+    -fx-border-style:solid;
+    -fx-border-color:#f5aca6;
+}

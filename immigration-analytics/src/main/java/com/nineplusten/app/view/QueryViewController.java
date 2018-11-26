@@ -216,10 +216,6 @@ public class QueryViewController {
 	  data.add(referred * 100);
 	  data.add(recieved * 100);
 
-	  System.out.print("Reff" + data.get(0));
-	  System.out.print("rec" + data.get(1));
-
-
 	  return data;
   }
 
@@ -293,7 +289,7 @@ public class QueryViewController {
 							  ),
 					  div(attrs(".template"),
 							  h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
-							  ,(img().withSrc("barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+							  ,(img().withSrc("./reports/barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
 							  ),
 					  div(attrs(".table-container"),(table().withClass(".table-data").with(
 							  tr().with(
@@ -308,11 +304,11 @@ public class QueryViewController {
 							  ))),
 						div(attrs(".template"),
 								h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
-								,(img().withSrc("pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
+								,(img().withSrc("./reports/pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
                 ),
             div(attrs(".template"),
               h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading"),
-              (img().withSrc("LineChart.jpg").withClass(".graphic-data").withAlt("Line Chart portraying Number of Clients Receiving Services by Date")))
+              (img().withSrc("./reports/LineChart.jpg").withClass(".graphic-data").withAlt("Line Chart portraying Number of Clients Receiving Services by Date")))
 						)
 				);
 			  
@@ -347,8 +343,8 @@ public class QueryViewController {
     bar.createChart(this.createDataset(),"");
     JFreeChart lineChart = ChartFactory.createLineChart("Clients by Date", "Date of Service", "Number of Clients",
     serviceAccessedTrends(), PlotOrientation.VERTICAL, true, true, false);
-    File lineChartFile = new File("./reports/LineChart.jpg");
-    ChartUtils.saveChartAsPNG(lineChartFile, lineChart, 1500, 500);
+    File lineChartFile = new File("LineChart.jpg");
+    ChartUtils.saveChartAsJPEG(lineChartFile, lineChart, 1300, 500);
   	String html = this.generatej2html();
   	this.addHtmltoFile(html);
     FileChooser chooser = new FileChooser();

@@ -194,33 +194,33 @@ public class QueryViewController {
   }
 
   private List<Double> getTemplateData() {
-  Reports report = new Reports(dataTable);
-  double referred = 0;
-  double recieved = 0;
-  List<Double> data = new ArrayList<>();
-  Map<String, String> columnIdName = columnSelectorTable.getItems().stream().filter(ColumnQueryChoice::isSelected).collect(
-        Collectors.toMap(ColumnQueryChoice::getColumnId, ColumnQueryChoice::getColumnName));
- if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("support_received_ind")) {
-  referred = report.getNonEmptyCellCount("assessment_referral_id");
-  recieved = report.getNonEmptyCellCount("support_received_ind");
- }
- if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("community_service_id")) {
-  referred = report.getNonEmptyCellCount("assessment_referral_id");
-  recieved = report.getNonEmptyCellCount("community_service_id");
- }
- if(columnIdName.containsKey("service_referred_by_id") && columnIdName.containsKey("orientation_service_id")) {
-  referred = report.getNonEmptyCellCount("service_referred_by_id");
-  recieved = report.getNonEmptyCellCount("orientation_service_id");
- }
+	  Reports report = new Reports(dataTable);
+	  double referred = 0;
+	  double recieved = 0;
+	  List<Double> data = new ArrayList<>();
+	  Map<String, String> columnIdName = columnSelectorTable.getItems().stream().filter(ColumnQueryChoice::isSelected).collect(
+			  Collectors.toMap(ColumnQueryChoice::getColumnId, ColumnQueryChoice::getColumnName));
+	  if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("support_received_ind")) {
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("support_received_ind");
+	  }
+	  if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("community_service_id")) {
+		  referred = report.getNonEmptyCellCount("assessment_referral_id");
+		  recieved = report.getNonEmptyCellCount("community_service_id");
+	  }
+	  if(columnIdName.containsKey("service_referred_by_id") && columnIdName.containsKey("orientation_service_id")) {
+		  referred = report.getNonEmptyCellCount("service_referred_by_id");
+		  recieved = report.getNonEmptyCellCount("orientation_service_id");
+	  }
 
-  data.add(referred * 100);
-  data.add(recieved * 100);
-  
-  System.out.print("Reff" + data.get(0));
-  System.out.print("rec" + data.get(1));
+	  data.add(referred * 100);
+	  data.add(recieved * 100);
 
-  
-  return data;
+	  System.out.print("Reff" + data.get(0));
+	  System.out.print("rec" + data.get(1));
+
+
+	  return data;
   }
   
   private CategoryDataset createDataset() {
@@ -238,36 +238,39 @@ public class QueryViewController {
   
   private String generatej2html() {
 
- ContainerTag html =  html(
-    head(
-        title("ICARE Reports"),
-        link().withRel("stylesheet").withHref("styles.css")
-    ),
-    body(
-    div(attrs(".header")).with(
-            h1("iCare Reports").withClass("title")
-    ),
-    div(attrs(".template"),
-            h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
-    ,(img().withSrc("barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
-    ),
-    div(attrs(".table-container"),(table().withClass(".table-data").with(
-        tr().with(
-                td().withText(
-                    "Refered: " + this.getTemplateData().get(0).toString() + "%"
-                ),
-                td().withText(
-                    "Recieved: " + this.getTemplateData().get(1).toString() + "%"
-                )
-         
-            )
-    )
-    )
-    )
-    )
-);
- 
- return html.render();
+	  ContainerTag html =  html(
+			  head(
+					  title("ICARE Reports"),
+					  link().withRel("stylesheet").withHref("styles.css")
+					  ),
+			  body(
+					  div(attrs(".header")).with(
+							  h1("iCare Reports").withClass("title")
+							  ),
+					  div(attrs(".template"),
+							  h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
+							  ,(img().withSrc("barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+							  ),
+					  div(attrs(".table-container"),(table().withClass(".table-data").with(
+							  tr().with(
+									  td().withText(
+											  "Refered: " + this.getTemplateData().get(0).toString() + "%"
+											  ),
+									  td().withText(
+											  "Recieved: " + this.getTemplateData().get(1).toString() + "%"
+											  )
+
+									  )
+							  ))),
+						div(attrs(".template"),
+								h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
+								,(img().withSrc("pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
+								)
+						)
+				);
+			  
+
+	  return html.render();
   }
   
   private void addHtmltoFile(String html) {
@@ -308,7 +311,7 @@ public class QueryViewController {
       Document document;
       String pathURL;
       try {
-        pathURL = pathURL = new File("reports/report.html").toURI().toURL().toString();
+        pathURL = new File("reports/report.html").toURI().toURL().toString();
         document = ReportUtil.html5ParseDocument(pathURL, 0);
       } catch (IOException e) {
         e.printStackTrace();
@@ -335,7 +338,6 @@ public class QueryViewController {
 	  double seniorAmount = report.getTargetSeniorPercent();
 	  double youthAmount = report.getTargetYouthPercent();
 	  double adultAmount = 100 - (childAmount + seniorAmount + youthAmount);
-	  
 	  DefaultPieDataset target_data = new DefaultPieDataset();
 	  target_data.setValue("Children (0 - 14 yrs)", childAmount);
 	  target_data.setValue("Youth (15 - 24 yrs)", youthAmount);

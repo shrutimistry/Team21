@@ -156,12 +156,6 @@ public class DataViewController {
       return dataset;
       
   }
-  /*private DefaultPieDataset createPieDataset() {
-	  DefaultPieDataset target_data = new DefaultPieDataset();
-	  target_data.setValue("Referred", this.getTemplateData().get(0));
-	  target_data.setValue("Received", this.getTemplateData().get(1));
-	  return target_data;
-  }*/
 
   private List<Double> getTemplateData() {
 	  Reports report = new Reports(dataTable);

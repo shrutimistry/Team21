@@ -73,8 +73,7 @@ public class DataViewController {
 
   @SuppressWarnings("unused")
   private App mainApp;
-  
-  private String pathURL;
+
 
   @FXML
   private void initialize() {

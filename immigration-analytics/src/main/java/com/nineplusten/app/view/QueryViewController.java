@@ -1,28 +1,53 @@
 package com.nineplusten.app.view;
 
+import static j2html.TagCreator.attrs;
+import static j2html.TagCreator.body;
+import static j2html.TagCreator.div;
+import static j2html.TagCreator.h1;
+import static j2html.TagCreator.h2;
+import static j2html.TagCreator.head;
+import static j2html.TagCreator.html;
+import static j2html.TagCreator.img;
+import static j2html.TagCreator.link;
+import static j2html.TagCreator.table;
+import static j2html.TagCreator.td;
+import static j2html.TagCreator.title;
+import static j2html.TagCreator.tr;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.QueryViewModel;
+import com.nineplusten.app.model.Reports;
 import com.nineplusten.app.model.TemplateData;
 import com.nineplusten.app.model.query.AgencyQueryChoice;
 import com.nineplusten.app.model.query.ColumnQueryChoice;
 import com.nineplusten.app.model.query.TemplateQueryChoice;
+import com.nineplusten.app.service.DoubleBarGraph;
+import com.nineplusten.app.service.PieChart_AWT;
 import com.nineplusten.app.service.QueryService;
 import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
+import j2html.tags.ContainerTag;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -165,11 +190,113 @@ public class QueryViewController {
     if (!queryService.isRunning()) {
       queryService.restart();
     }
+
+  }
+
+  private List<Double> getTemplateData() {
+  Reports report = new Reports(dataTable);
+  double referred = 0;
+  double recieved = 0;
+  List<Double> data = new ArrayList<>();
+  Map<String, String> columnIdName = columnSelectorTable.getItems().stream().filter(ColumnQueryChoice::isSelected).collect(
+        Collectors.toMap(ColumnQueryChoice::getColumnId, ColumnQueryChoice::getColumnName));
+ if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("support_received_ind")) {
+  referred = report.getNonEmptyCellCount("assessment_referral_id");
+  recieved = report.getNonEmptyCellCount("support_received_ind");
+ }
+ if(columnIdName.containsKey("assessment_referral_id") && columnIdName.containsKey("community_service_id")) {
+  referred = report.getNonEmptyCellCount("assessment_referral_id");
+  recieved = report.getNonEmptyCellCount("community_service_id");
+ }
+ if(columnIdName.containsKey("service_referred_by_id") && columnIdName.containsKey("orientation_service_id")) {
+  referred = report.getNonEmptyCellCount("service_referred_by_id");
+  recieved = report.getNonEmptyCellCount("orientation_service_id");
+ }
+
+  data.add(referred * 100);
+  data.add(recieved * 100);
+  
+  System.out.print("Reff" + data.get(0));
+  System.out.print("rec" + data.get(1));
+
+  
+  return data;
+  }
+  
+  private CategoryDataset createDataset() {
+      
+      final String series1 = "Referred";
+      final String series2 = "Recieved";
+
+      final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+      dataset.addValue(this.getTemplateData().get(0), "Percentage", series1);
+      dataset.addValue(this.getTemplateData().get(1), "Percentage", series2);
+      return dataset;
+      
+  }
+  
+  private String generatej2html() {
+
+ ContainerTag html =  html(
+    head(
+        title("ICARE Reports"),
+        link().withRel("stylesheet").withHref("styles.css")
+    ),
+    body(
+    div(attrs(".header")).with(
+            h1("iCare Reports").withClass("title")
+    ),
+    div(attrs(".template"),
+            h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
+    ,(img().withSrc("barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+    ),
+    div(attrs(".table-container"),(table().withClass(".table-data").with(
+        tr().with(
+                td().withText(
+                    "Refered: " + this.getTemplateData().get(0).toString() + "%"
+                ),
+                td().withText(
+                    "Recieved: " + this.getTemplateData().get(1).toString() + "%"
+                )
+         
+            )
+    )
+    )
+    )
+    )
+);
+ 
+ return html.render();
+  }
+  
+  private void addHtmltoFile(String html) {
+  File file = new File("./reports/report.html");
+      FileWriter fr = null;
+      try {
+          fr = new FileWriter(file);
+          fr.write(html);
+      } catch (IOException e) {
+          e.printStackTrace();
+      }finally{
+          //close resources
+          try {
+              fr.close();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
   }
 
 
   @FXML
-  private void generateReport() {
+  private void generateReport() throws IOException {
+	PieChart_AWT pie = new PieChart_AWT();
+	pie.createPieChart(this.getAgeReports());
+	DoubleBarGraph bar = new DoubleBarGraph();
+  	bar.createChart(this.createDataset(),"");
+  	String html = this.generatej2html();
+  	this.addHtmltoFile(html);
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Save Report File");
     chooser.setInitialFileName("*.pdf");
@@ -181,7 +308,7 @@ public class QueryViewController {
       Document document;
       String pathURL;
       try {
-        pathURL = getClass().getClassLoader().getResource("report.html").toString();
+        pathURL = pathURL = new File("reports/report.html").toURI().toURL().toString();
         document = ReportUtil.html5ParseDocument(pathURL, 0);
       } catch (IOException e) {
         e.printStackTrace();
@@ -199,6 +326,22 @@ public class QueryViewController {
         }
       }
     }
+  }
+  
+  public DefaultPieDataset getAgeReports() {
+	  Reports report = new Reports(dataTable);
+	  report.sortAges();
+	  double childAmount = report.getTargetChildPercent();
+	  double seniorAmount = report.getTargetSeniorPercent();
+	  double youthAmount = report.getTargetYouthPercent();
+	  double adultAmount = 100 - (childAmount + seniorAmount + youthAmount);
+	  
+	  DefaultPieDataset target_data = new DefaultPieDataset();
+	  target_data.setValue("Children (0 - 14 yrs)", childAmount);
+	  target_data.setValue("Youth (15 - 24 yrs)", youthAmount);
+	  target_data.setValue("Adult (25 - 64 yrs)", adultAmount);
+	  target_data.setValue("Senior (65+ yrs)", seniorAmount);
+	  return target_data;
   }
 
   private void startListeners() {

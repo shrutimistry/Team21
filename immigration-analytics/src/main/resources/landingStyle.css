@@ -1,0 +1,118 @@
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 1 !important;
+}
+
+.tab-pane:top *.tab-header-area {
+    /* -fx-background-insets: 0, 0 0 1 0; */
+    -fx-padding: 0.416667em 0.166667em 0.0em 0.0em; /* overridden as 5 2 0 0 */
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:90px;
+}
+
+.tab-pane #myAccountTab.tab {
+    -fx-background-image: url("user_14_0_000000_none.png");
+}
+
+.tab-pane #myAccountTab.tab:selected {
+    -fx-background-image: url("user_14_0_ffffff_none.png");
+}
+
+.tab-pane #accountCreationTab.tab {
+    -fx-background-image: url("user-plus_14_0_000000_none.png");
+}
+
+.tab-pane #accountCreationTab.tab:selected {
+    -fx-background-image: url("user-plus_14_0_ffffff_none.png");
+}
+
+
+.tab-pane #templateEditorTab.tab {
+    -fx-background-image: url("file-text_14_0_000000_none.png");
+}
+
+.tab-pane #templateEditorTab.tab:selected {
+    -fx-background-image: url("file-text_14_0_ffffff_none.png");
+}
+
+.tab-pane #templateEditorTab.tab {
+    -fx-background-image: url("file-text_14_0_000000_none.png");
+}
+
+.tab-pane #templateEditorTab.tab:selected {
+    -fx-background-image: url("file-text_14_0_ffffff_none.png");
+}
+
+.tab-pane #templateBrowserTab.tab {
+    -fx-background-image: url("file_14_0_000000_none.png");
+}
+
+.tab-pane #templateBrowserTab.tab:selected {
+    -fx-background-image: url("file_14_0_ffffff_none.png");
+}
+
+.tab-pane #uploadDataTab.tab {
+    -fx-background-image: url("cloud-upload_14_0_000000_none.png");
+}
+
+.tab-pane #uploadDataTab.tab:selected {
+    -fx-background-image: url("cloud-upload_14_0_ffffff_none.png");
+}
+
+.tab-pane #dataBrowserTab.tab {
+    -fx-background-image: url("database_14_0_000000_none.png");
+}
+
+.tab-pane #dataBrowserTab.tab:selected {
+    -fx-background-image: url("database_14_0_ffffff_none.png");
+}
+
+.tab-pane #queryToolTab.tab {
+    -fx-background-image: url("bolt_14_0_000000_none.png");
+}
+
+.tab-pane #queryToolTab.tab:selected {
+    -fx-background-image: url("bolt_14_0_ffffff_none.png");
+}
+
+.tab-pane #accountManagementTab.tab {
+    -fx-background-image: url("users_14_0_000000_none.png");
+}
+
+.tab-pane #accountManagementTab.tab:selected {
+    -fx-background-image: url("users_14_0_ffffff_none.png");
+}
+
+.tab-pane #myDataTab.tab {
+    -fx-background-image: url("database_14_0_000000_none.png");
+}
+
+.tab-pane #myDataTab.tab:selected {
+    -fx-background-image: url("database_14_0_ffffff_none.png");
+}
+
+
+.tab-pane .tab
+{
+    -fx-background-color: #ffffff;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 5px center;
+
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #1E88E5;
+}
+
+.tab .tab-label { 
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 15px;
+}
+
+.tab:selected .tab-label { 
+    -fx-text-fill: #ffffff;
+}

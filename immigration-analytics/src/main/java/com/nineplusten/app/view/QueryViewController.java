@@ -289,7 +289,7 @@ public class QueryViewController {
 							  ),
 					  div(attrs(".template"),
 							  h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
-							  ,(img().withSrc("./reports/barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
+							  ,(img().withSrc("./barChart.jpg").withClass(".graphic-data").withAlt("Bar Chart portryaing Services Recieved and Referred"))
 							  ),
 					  div(attrs(".table-container"),(table().withClass(".table-data").with(
 							  tr().with(
@@ -304,11 +304,11 @@ public class QueryViewController {
 							  ))),
 						div(attrs(".template"),
 								h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
-								,(img().withSrc("./reports/pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
+								,(img().withSrc("./pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
                 ),
             div(attrs(".template"),
               h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading"),
-              (img().withSrc("./reports/LineChart.jpg").withClass(".graphic-data").withAlt("Line Chart portraying Number of Clients Receiving Services by Date")))
+              (img().withSrc("./LineChart.jpg").withClass(".graphic-data").withAlt("Line Chart portraying Number of Clients Receiving Services by Date")))
 						)
 				);
 			  

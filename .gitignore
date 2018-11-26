@@ -59,3 +59,6 @@ local.properties
 
 #VS Code files
 .vscode/
+
+#Mac files
+.DS_Store

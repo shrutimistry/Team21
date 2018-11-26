@@ -1,6 +1,8 @@
 package com.nineplusten.app.view;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +29,9 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -51,6 +56,8 @@ public class DataEntryViewController {
   private ProgressIndicator submitIndicator;
   @FXML
   private Button submitButton;
+  @FXML
+  private Button downloadButton;
 
   private DataUploadModel dataModel;
   private LoadExcelService loadExcelService;
@@ -62,12 +69,24 @@ public class DataEntryViewController {
 
   @FXML
   private void initialize() {
+    loadResources();
     dataModel = new DataUploadModel();
     templateSelector.getItems().addAll(Cache.templates);
     dataUploadPreview.visibleProperty().bind(dataModel.excelLoadedProperty());
     templateNameText.textProperty().bind(templateSelector.valueProperty().asString());
     previewTable.setPlaceholder(new Label("No content found for selected file."));
     configureListeners();
+  }
+
+  private void loadResources() {
+    Image dlImage =
+        new Image(getClass().getClassLoader().getResourceAsStream("download_16_0_000000_none.png"));
+    Image ulImage =
+        new Image(getClass().getClassLoader().getResourceAsStream("upload_16_0_000000_none.png"));
+    downloadButton.setGraphic(new ImageView(dlImage));
+    downloadButton.setTooltip(new Tooltip("Download ICARE template"));
+    browseButton.setGraphic(new ImageView(ulImage));
+    browseButton.setTooltip(new Tooltip("Upload ICARE template with data"));
   }
 
   @FXML
@@ -81,6 +100,23 @@ public class DataEntryViewController {
       dataModel.setExcelPath(excelPath);
       if (!loadExcelService.isRunning()) {
         loadExcelService.restart();
+      }
+    }
+  }
+
+  @FXML
+  private void downloadExcel(ActionEvent e) {
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Download Template");
+    chooser.setInitialFileName(templateSelector.getValue().getTemplateFileName() + ".xlsx");
+    chooser.getExtensionFilters().addAll(new ExtensionFilter("Excel Files (.xlsx)", "*.xlsx"));
+    File selectedFile = chooser.showSaveDialog(mainApp.getPrimaryStage());
+    if (selectedFile != null) {
+      try {
+        Files.copy(getClass().getClassLoader().getResourceAsStream(
+            templateSelector.getValue().getTemplateFilePath()), selectedFile.toPath());
+      } catch (IOException e1) {
+        e1.printStackTrace();
       }
     }
   }
@@ -140,13 +176,16 @@ public class DataEntryViewController {
     });
     browseButton.disableProperty()
         .bind(loadExcelService.runningProperty().or(templateSelector.valueProperty().isNull()));
+    downloadButton.disableProperty()
+        .bind(loadExcelService.runningProperty().or(templateSelector.valueProperty().isNull()));
     loadProgress.visibleProperty().bind(loadExcelService.runningProperty());
     loadProgress.progressProperty().bind(loadExcelService.progressProperty());
   }
-  
+
   private void configureSubmitDataService() {
-    submitDataService = new SubmitDataService(dataModel.excelDataProperty());
-    
+    submitDataService = new SubmitDataService(dataModel.excelDataProperty(),
+        mainApp.getSession().getUser().getAgency(), templateSelector.valueProperty());
+
     submitDataService.setOnFailed(new EventHandler<WorkerStateEvent>() {
       @Override
       public void handle(WorkerStateEvent event) {
@@ -159,7 +198,7 @@ public class DataEntryViewController {
     submitButton.visibleProperty().bind(submitDataService.runningProperty().not());
     submitButton.managedProperty().bind(submitButton.visibleProperty());
     submitIndicator.managedProperty().bind(submitIndicator.visibleProperty());
-    
+
   }
 
   private void configureTable() {

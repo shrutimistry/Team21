@@ -1,9 +1,9 @@
 package com.nineplusten.app.model;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -11,12 +11,12 @@ import javafx.collections.ObservableList;
 
 public class DataUploadModel {
   private BooleanProperty excelLoaded;
-  private ObjectProperty<ObservableList<TemplateData>> excelData;
+  private ListProperty<TemplateData> excelData;
   private StringProperty excelPath;
   
   public DataUploadModel() {
     excelLoaded = new SimpleBooleanProperty(false);
-    excelData = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+    excelData = new SimpleListProperty<>(FXCollections.observableArrayList());
     excelPath = new SimpleStringProperty("");
   }
   
@@ -32,7 +32,7 @@ public class DataUploadModel {
     excelLoaded.set(val);
   }
   
-  public ObjectProperty<ObservableList<TemplateData>> excelDataProperty() {
+  public ListProperty<TemplateData> excelDataProperty() {
     return excelData;
   }
   

@@ -2,6 +2,7 @@ package com.nineplusten.app.view;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
 import com.nineplusten.app.model.Template;
@@ -39,6 +40,9 @@ public class DataViewController {
 
   private TemplateDataRetrievalService dataService;
 
+  @SuppressWarnings("unused")
+  private App mainApp;
+
   @FXML
   private void initialize() {
     agencySelector.getItems().addAll(Cache.agencies);
@@ -50,13 +54,18 @@ public class DataViewController {
     configureListeners();
   }
 
+
+  public void setMainApp(App mainApp) {
+    this.mainApp = mainApp;
+  }
+
   private void configureBindings() {
     templateSelector.disableProperty().bind(agencySelector.valueProperty().isNull());
     agencyNameText.textProperty().bind(agencySelector.valueProperty().asString());
     templateNameText.textProperty().bind(templateSelector.valueProperty().asString());
     dataContainer.visibleProperty().bind(agencySelector.valueProperty().isNotNull()
         .and(templateSelector.valueProperty().isNotNull()));
-    dataTable.disableProperty().bind(dataService.runningProperty());
+    dataContainer.disableProperty().bind(dataService.runningProperty());
     dataServiceProgressIndicator.visibleProperty().bind(dataService.runningProperty());
   }
 
@@ -84,11 +93,10 @@ public class DataViewController {
         dataService.restart();
       }
     });
-    
+
   }
 
   private void configureTable() {
-    dataTable.getColumns().clear();
     List<TableColumn<TemplateData, String>> tableColumns =
         templateSelector.getValue().getColumns().entrySet().stream().map(e -> {
           TableColumn<TemplateData, String> column = new TableColumn<>(e.getValue());
@@ -98,6 +106,6 @@ public class DataViewController {
               cellData.getValue().getFieldData().get(e.getKey())));
           return column;
         }).collect(Collectors.toList());
-    dataTable.getColumns().addAll(tableColumns);
+    dataTable.getColumns().setAll(tableColumns);
   }
 }

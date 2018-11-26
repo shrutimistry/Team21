@@ -16,7 +16,7 @@ public class QueryStringUtilTest {
   void getQueryString_keyValue() throws UnsupportedEncodingException {
     String key = "Name";
     String value = "Dennis";
-    String actual = QueryStringUtil.getQueryString(key, value);
+    String actual = QueryUtil.getQueryString(key, value);
     String expected =
         "?q=" + URLEncoder.encode("{\"Name\"", ENC) + ":" + URLEncoder.encode("\"Dennis\"}", ENC);
     assertEquals(expected, actual);
@@ -31,7 +31,7 @@ public class QueryStringUtilTest {
     map.put(key, value);
     JSONObject o = new JSONObject(map);
     
-    String actual = QueryStringUtil.getQueryString(o);
+    String actual = QueryUtil.getQueryString(o);
     String expected =
         "?q=" + URLEncoder.encode("{\"Name\":\"Dennis\"}", ENC);
     assertEquals(expected, actual);

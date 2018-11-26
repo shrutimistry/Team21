@@ -22,13 +22,13 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class SubmitDataService extends Service<Boolean> {
+public class ModifyDataService extends Service<Boolean> {
   private ListProperty<TemplateData> data;
   private Agency agency;
   private ReadOnlyObjectProperty<Template> template;
   private Gson gson;
 
-  public SubmitDataService(ListProperty<TemplateData> data, Agency agency,
+  public ModifyDataService(ListProperty<TemplateData> data, Agency agency,
       ReadOnlyObjectProperty<Template> template) {
     this.data = data;
     this.gson =
@@ -44,10 +44,16 @@ public class SubmitDataService extends Service<Boolean> {
       @Override
       protected Boolean call() throws Exception {
         Set<TemplateData> existingData = queryExistingData();
-        List<TemplateData> submissionData = data.get().stream()
-            .filter(data -> !existingData.contains(data)).collect(Collectors.toList());
+        Set<String> submissionIds =
+            data.get().stream().map(data -> data.get_id()).collect(Collectors.toSet());
+        List<String> deletionIds = existingData.stream().map(data -> data.get_id())
+            .filter(id -> !submissionIds.contains(id)).collect(Collectors.toList());
+        if (!deletionIds.isEmpty()) {
+          String[] deletionIdsArray = new String[deletionIds.size()];
+          RestDbIO.delete(Routes.TEMPLATES_DATA, deletionIds.toArray(deletionIdsArray));
+        }
         Type listType = new TypeToken<List<TemplateData>>() {}.getType();
-        String dataJson = gson.toJson(submissionData, listType);
+        String dataJson = gson.toJson(data.get(), listType);
         return RestDbIO.post(Routes.TEMPLATES_DATA, dataJson);
       }
     };
@@ -57,7 +63,8 @@ public class SubmitDataService extends Service<Boolean> {
     Set<TemplateData> existingData;
     Type templateDataType = new TypeToken<Collection<TemplateData>>() {}.getType();
     try {
-      existingData = new HashSet<TemplateData>(gson.fromJson(
+      existingData =
+          new HashSet<TemplateData>(gson.fromJson(
               RestDbIO.get(Routes.TEMPLATES_DATA,
                   QueryUtil.buildTemplateJsonQuery(template.get(), agency)).toString(),
               templateDataType));

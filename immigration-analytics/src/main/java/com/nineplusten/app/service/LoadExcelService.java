@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -42,6 +44,7 @@ public class LoadExcelService extends Service<ObservableList<TemplateData>> {
     return new Task<ObservableList<TemplateData>>() {
       @Override
       protected ObservableList<TemplateData> call() throws Exception {
+        Set<TemplateData> templateDataCache = new HashSet<>();
         ObservableList<TemplateData> allTemplateData = FXCollections.observableArrayList();
         DataFormatter df = new DataFormatter();
 
@@ -80,7 +83,9 @@ public class LoadExcelService extends Service<ObservableList<TemplateData>> {
               if (!empty) {
                 TemplateData rowData =
                     new TemplateData(template.get(), agency, clientId, rowDataMap);
-                allTemplateData.add(rowData);
+                if (!templateDataCache.contains(rowData)) {
+                  templateDataCache.add(rowData);
+                }
               }
             } else if (currentRow.getRowNum() == 1) {
               Iterator<Cell> cellIter = currentRow.cellIterator();
@@ -95,6 +100,7 @@ public class LoadExcelService extends Service<ObservableList<TemplateData>> {
               }
             }
           }
+          allTemplateData.addAll(templateDataCache);
           closeExcel(excelDoc);
         }
         return allTemplateData;

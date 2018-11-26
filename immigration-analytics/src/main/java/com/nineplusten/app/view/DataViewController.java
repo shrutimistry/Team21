@@ -19,6 +19,8 @@ import org.jfree.data.general.PieDataset;
 
 import static j2html.TagCreator.*;
 import org.w3c.dom.Document;
+import java.util.List;
+import java.util.stream.Collectors;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.Agency;
@@ -69,6 +71,7 @@ public class DataViewController {
 
   private TemplateDataRetrievalService dataService;
 
+  @SuppressWarnings("unused")
   private App mainApp;
   
   private String pathURL;
@@ -251,7 +254,7 @@ public class DataViewController {
 	  target_data.setValue("Senior (65+ yrs)", seniorAmount);
 	  return target_data;
   }
-
+  
   public void setMainApp(App mainApp) {
     this.mainApp = mainApp;
   }
@@ -294,7 +297,6 @@ public class DataViewController {
   }
 
   private void configureTable() {
-    dataTable.getColumns().clear();
     List<TableColumn<TemplateData, String>> tableColumns =
         templateSelector.getValue().getColumns().entrySet().stream().map(e -> {
           TableColumn<TemplateData, String> column = new TableColumn<>(e.getValue());
@@ -304,6 +306,6 @@ public class DataViewController {
               cellData.getValue().getFieldData().get(e.getKey())));
           return column;
         }).collect(Collectors.toList());
-    dataTable.getColumns().addAll(tableColumns);
+    dataTable.getColumns().setAll(tableColumns);
   }
 }

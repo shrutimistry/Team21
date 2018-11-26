@@ -30,6 +30,8 @@ public class LandingController {
   private DataEntryViewController dataEntryController;
   @FXML
   private DataViewController dataViewController;
+  @FXML
+  private QueryViewController queryViewController;
 
   private App mainApp;
 
@@ -44,6 +46,7 @@ public class LandingController {
     dataEntryController.setMainApp(mainApp);
     dataEntryController.configureServices();
     dataViewController.setMainApp(mainApp);
+    queryViewController.setMainApp(mainApp);
   }
 
   public void configureUserView() {

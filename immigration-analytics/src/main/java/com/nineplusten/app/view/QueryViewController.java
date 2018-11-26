@@ -334,6 +334,13 @@ public class QueryViewController {
       }
   }
 
+  private void createLineChart() throws IOException{
+    JFreeChart lineChart = ChartFactory.createLineChart("Clients by Date", "Date of Service", "Number of Clients",
+    serviceAccessedTrends(), PlotOrientation.VERTICAL, true, true, false);
+    File lineChartFile = new File("./reports/LineChart.jpg");
+    ChartUtils.saveChartAsJPEG(lineChartFile, lineChart, 1500, 500);
+  }
+
 
   @FXML
   private void generateReport() throws IOException {
@@ -341,10 +348,7 @@ public class QueryViewController {
 	pie.createPieChart(this.getAgeReports());
 	DoubleBarGraph bar = new DoubleBarGraph();
     bar.createChart(this.createDataset(),"");
-    JFreeChart lineChart = ChartFactory.createLineChart("Clients by Date", "Date of Service", "Number of Clients",
-    serviceAccessedTrends(), PlotOrientation.VERTICAL, true, true, false);
-    File lineChartFile = new File("LineChart.jpg");
-    ChartUtils.saveChartAsJPEG(lineChartFile, lineChart, 1300, 500);
+    createLineChart();
   	String html = this.generatej2html();
   	this.addHtmltoFile(html);
     FileChooser chooser = new FileChooser();

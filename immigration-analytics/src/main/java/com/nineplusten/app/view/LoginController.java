@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import com.nineplusten.app.App;
 import com.nineplusten.app.model.User;
 import com.nineplusten.app.service.LoginService;
+import com.nineplusten.app.util.AnimationUtil;
+import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.HBox;
 
 public class LoginController {
   @FXML
@@ -25,7 +27,9 @@ public class LoginController {
   @FXML
   private Button loginButton;
   @FXML
-  private Label message;
+  private Label messageText;
+  @FXML
+  private HBox messageContainer;
   @FXML
   private ProgressIndicator lsRunning;
 
@@ -42,13 +46,16 @@ public class LoginController {
   private void initialize() {
     ls = new LoginService(username.textProperty(), password.textProperty(), gson);
     lsRunning.visibleProperty().bind(ls.runningProperty());
+    lsRunning.managedProperty().bind(lsRunning.visibleProperty());
+    messageContainer.managedProperty().bind(messageContainer.visibleProperty());
     loginButton.disableProperty().bind(ls.runningProperty());
     configureBehaviours();
   }
 
   @FXML
   private void loginAction(ActionEvent e) {
-    message.setText("");
+    messageContainer.setVisible(false);
+    messageText.setText("");
     if (!ls.isRunning()) {
       ls.restart();
     }
@@ -66,8 +73,11 @@ public class LoginController {
           // technically won't need this
           mainApp.getSession().invalidateSession();
 
-          message.setTextFill(Color.RED);
-          message.setText("Authentication failure");
+          messageContainer.getStyleClass().remove("alert-box-success");
+          messageContainer.getStyleClass().add("alert-box-fail");
+          messageText.setText("Authentication failure.");
+          messageContainer.setVisible(true);
+          Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
         }
       }
     });
@@ -79,8 +89,11 @@ public class LoginController {
         throwable.printStackTrace();
         mainApp.getSession().invalidateSession();
 
-        message.setTextFill(Color.RED);
-        message.setText("Failed to connect. Please verify connection.");
+        messageContainer.getStyleClass().remove("alert-box-success");
+        messageContainer.getStyleClass().add("alert-box-fail");
+        messageText.setText("Failed to connect. Please verify connection.");
+        messageContainer.setVisible(true);
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
   }

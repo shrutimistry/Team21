@@ -1,7 +1,14 @@
 package com.nineplusten.app.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
 
 import javafx.scene.control.TableView;
 
@@ -9,10 +16,11 @@ public class Reports {
 	
 	private TableView<TemplateData> dataTable;
 	
-	private List<Double> childEntries = new ArrayList<Double>();
-	private List<Double> youthEntries = new ArrayList<Double>();
-	private List<Double> seniorEntries = new ArrayList<Double>();
-	private List<Double> adultEntries = new ArrayList<Double>();
+	private double childEntries;
+	private double youthEntries;
+	private double seniorEntries;
+	private double adultEntries;
+	private double totalRows;
 	
 	public Reports(TableView<TemplateData> dataTable) {
 		this.dataTable = dataTable;
@@ -33,9 +41,47 @@ public class Reports {
 		   return rowCount;
 	}
 	
+	public void sortAges() {
+		DateTime today = DateTime.now();
+		
+		this.totalRows = (Integer) getValuesforColumn("client_birth_dt").get(0);
+		  System.out.println("total rows" + totalRows);
+		  List<String> rowNums = (List<String>) getValuesforColumn("client_birth_dt").get(1);
+		  int i = 0;
+		  for (i = 0; i < rowNums.size(); i++) {
+			  
+			  String year = rowNums.get(i).substring(rowNums.get(i).length() - 2);
+			  if (Integer.parseInt(year) <= 99 && Integer.parseInt(year) >= today.getYear()) {
+				  year = "19" + year;
+			  }
+			  else {
+				  year = "20" + year;
+			  }
+			  //DateTime clientBirthday = DateTime.parse(rowNums.get(i));
+			
+			 
+			  //Years duration = Years.yearsBetween(today, clientBirthday);
+			  
+			  int difference = today.getYear() - Integer.parseInt(year);
+			  
+			  if (difference <= 14) {
+				  this.childEntries++;
+			  }
+			  else if (difference > 14 && difference <= 24) {
+				  this.youthEntries++;
+			  }
+			  else if (difference > 24 && difference <= 64) {
+				  this.adultEntries++;
+			  }
+			  else {
+				  this.seniorEntries++;
+			  }
+		  }
+	}
+	
 	
 	  public double getTargetChildPercent() {
-		  double total_rows = (Integer) getValuesforColumn("target_group_children_ind").get(0);
+		  /*double total_rows = (Integer) getValuesforColumn("target_group_children_ind").get(0);
 		  System.out.println("total rows" + total_rows);
 		  List<String> target_child = (List<String>) getValuesforColumn("target_group_children_ind").get(1);
 		  int i = 0;
@@ -45,16 +91,14 @@ public class Reports {
 				  count_child += 1;
 			  }
 		  }
-		  System.out.println("count child " + count_child);
-		  double child_percent_decimal = count_child/total_rows;
-		  double child_percent = child_percent_decimal * 100;
-		  System.out.println("percent hin child " + child_percent_decimal);
-
-		  return child_percent;
+		  System.out.println("count child " + count_child);*/
+		  double childPercent = (childEntries/totalRows) * 100;
+		  
+		  return childPercent;
 	  }
 	  
 	  public double getTargetYouthPercent() {
-		  double total_rows = (Integer) getValuesforColumn("target_group_youth_ind").get(0);
+		  /*double total_rows = (Integer) getValuesforColumn("target_group_youth_ind").get(0);
 		  List<String> target_youth = (List<String>) getValuesforColumn("target_group_youth_ind").get(1);
 		  int i = 0;
 		  int count_youth = 0;
@@ -64,11 +108,15 @@ public class Reports {
 			  }
 		  }
 		  double youth_percent = (count_youth/total_rows)*100;
-		  return youth_percent;
+		  return youth_percent;*/
+		  
+		  double youthPercent = (youthEntries/this.totalRows)*100;
+		  
+		  return youthPercent;
 		  
 	  }
 	  public double getTargetSeniorPercent() {
-		  double total_rows = (Integer) getValuesforColumn("target_group_senior_ind").get(0);
+		  /*double total_rows = (Integer) getValuesforColumn("target_group_senior_ind").get(0);
 		  List<String> target_senior = (List<String>) getValuesforColumn("target_group_senior_ind").get(1);
 		  int i = 0;
 		  int count_senior = 0;
@@ -78,7 +126,10 @@ public class Reports {
 			  }
 		  }
 		  double senior_percent = (count_senior/total_rows)*100;
-		  return senior_percent;
+		  return senior_percent;*/
+		  double seniorPercent = (seniorEntries/this.totalRows)*100;
+		  
+		  return seniorPercent;
 		  
 	  }
 	  public double getNonEmptyCellCount(String columnid) {

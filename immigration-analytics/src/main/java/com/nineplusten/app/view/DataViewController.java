@@ -120,10 +120,10 @@ public class DataViewController {
 			            h1(templateNameText.getText()).withClass("title")
 			    			),
 			    	div(attrs(".template")).with(
-				            h2(templateNameText.getText() + "'s Reffered vs Recieved").withClass("heading")
+				            h2(templateNameText.getText() + "'s Referred vs Recieved").withClass("heading")
 				    			),
-			    	div(attrs(".graphic-data")).with(img().withSrc("reports/barChart.png").withAlt("Bar Chart portryaing Services Recieved and Referred")),
-			    	div(attrs(".graphic-data")).with(img().withSrc("reports/pieChart.png").withAlt("Pie Chart illustrating the various age groups represented in the service"))
+			    	div(attrs(".graphic-data")).with(img().withSrc("barChart.png").withAlt("Bar Chart portraying Services Recieved and Referred")),
+			    	div(attrs(".graphic-data")).with(img().withSrc("pieChart.png").withAlt("Pie Chart illustrating the various age groups represented in the service"))
 			    )
 			);
 	 
@@ -229,6 +229,7 @@ public class DataViewController {
   
   public DefaultPieDataset getAgeReports() {
 	  Reports report = new Reports(dataTable);
+	  report.sortAges();
 	  double childAmount = report.getTargetChildPercent();
 	  double seniorAmount = report.getTargetSeniorPercent();
 	  double youthAmount = report.getTargetYouthPercent();

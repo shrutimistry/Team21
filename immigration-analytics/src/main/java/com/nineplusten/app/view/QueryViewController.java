@@ -1,37 +1,26 @@
 package com.nineplusten.app.view;
 
-import static j2html.TagCreator.attrs;
-import static j2html.TagCreator.body;
-import static j2html.TagCreator.div;
-import static j2html.TagCreator.h1;
-import static j2html.TagCreator.h2;
-import static j2html.TagCreator.head;
-import static j2html.TagCreator.html;
-import static j2html.TagCreator.img;
-import static j2html.TagCreator.link;
-import static j2html.TagCreator.table;
-import static j2html.TagCreator.td;
-import static j2html.TagCreator.title;
-import static j2html.TagCreator.tr;
+import static j2html.TagCreator.*;
+import j2html.tags.ContainerTag;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.w3c.dom.Document;
 import com.nineplusten.app.App;
 import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.QueryViewModel;
@@ -46,6 +35,17 @@ import com.nineplusten.app.service.QueryService;
 import com.nineplusten.app.util.ReportUtil;
 import com.nineplusten.app.util.TextUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import j2html.tags.ContainerTag;
 import javafx.beans.property.BooleanProperty;
@@ -64,6 +64,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+
 
 public class QueryViewController {
   @FXML
@@ -222,6 +223,50 @@ public class QueryViewController {
 
 	  return data;
   }
+
+  private DefaultCategoryDataset serviceAccessedTrends() {
+
+    List<String> servicesReceived = new ArrayList<>();
+
+    TreeMap<Date, String> dateSizeMap = new TreeMap<>();
+
+    TableColumn<TemplateData, ?> srColumn = new TableColumn<>();
+    TableColumn<TemplateData, ?> sdColumn = new TableColumn<>();
+    TableColumn<TemplateData, ?> gsColumn = new TableColumn<>();
+
+    for (TableColumn<TemplateData, ?> column : dataTable.getColumns()) {
+      if (column.getText().equals("Services Received")) {
+        srColumn = column;
+      } else if (column.getText().equals("Start Date of Service (YYYY-MM-DD)")) {
+        sdColumn = column;
+      } else if (column.getText().equals("Number of Clients in Group")) {
+        gsColumn = column;
+      }
+    }
+
+    SimpleDateFormat templateDateFormatter = new SimpleDateFormat("MM/dd/yy");
+    SimpleDateFormat graphDateFormatter = new SimpleDateFormat("MMM yyyy");
+    for (TemplateData data : dataTable.getItems()) {
+      servicesReceived.add(srColumn.getCellData(data).toString());
+      try {
+        Date date = templateDateFormatter.parse(sdColumn.getCellData(data).toString());
+        dateSizeMap.put(date, gsColumn.getCellData(data).toString());
+      } catch (ParseException e) {
+        System.out.println("Date parse failed");
+      }
+    }
+
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    SortedSet<Date> dates = new TreeSet<>(dateSizeMap.keySet());
+    for (Date date : dates) {
+      String size = dateSizeMap.get(date);
+      dataset.addValue(Double.parseDouble(size), "clients", graphDateFormatter.format(date));
+    }
+
+    return dataset;
+
+  }
+
   
   private CategoryDataset createDataset() {
       
@@ -265,7 +310,10 @@ public class QueryViewController {
 						div(attrs(".template"),
 								h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading")
 								,(img().withSrc("pieChart.jpg").withClass(".graphic-data").withAlt("Pie Chart illustrating the various age groups represented in the service"))
-								)
+                ),
+            div(attrs(".template"),
+              h2(queryModel.getSelectedTemplate().getTemplateName()).withClass("heading"),
+              (img().withSrc("LineChart.jpg").withClass(".graphic-data").withAlt("Line Chart portraying Number of Clients Receiving Services by Date")))
 						)
 				);
 			  
@@ -297,7 +345,11 @@ public class QueryViewController {
 	PieChart_AWT pie = new PieChart_AWT();
 	pie.createPieChart(this.getAgeReports());
 	DoubleBarGraph bar = new DoubleBarGraph();
-  	bar.createChart(this.createDataset(),"");
+    bar.createChart(this.createDataset(),"");
+    JFreeChart lineChart = ChartFactory.createLineChart("Clients by Date", "Date of Service", "Number of Clients",
+    serviceAccessedTrends(), PlotOrientation.VERTICAL, true, true, false);
+    File lineChartFile = new File("./reports/LineChart.jpg");
+    ChartUtils.saveChartAsPNG(lineChartFile, lineChart, 1500, 500);
   	String html = this.generatej2html();
   	this.addHtmltoFile(html);
     FileChooser chooser = new FileChooser();

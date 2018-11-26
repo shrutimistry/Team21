@@ -70,6 +70,8 @@ public class DataViewController {
   private TemplateDataRetrievalService dataService;
 
   private App mainApp;
+  
+  private String pathURL;
 
   @FXML
   private void initialize() {
@@ -129,9 +131,14 @@ public class DataViewController {
 	 
 	 System.out.println(html.render());
 	 
-	 BufferedWriter writer = new BufferedWriter(new FileWriter("reports/report.html"));
+	 FileWriter fw = new FileWriter("reports/report.html");
+	 File file = new File("reports/report.html");
+	 this.pathURL = file.getAbsolutePath();
+	 BufferedWriter writer = new BufferedWriter(fw);
 	 writer.write(html.render());
 	 writer.close();
+	 
+	 
   }
   
   	private CategoryDataset createDataset() {
@@ -198,9 +205,11 @@ public class DataViewController {
       // TODO: generate HTML
       String path = (selectedFile.getAbsolutePath());
       Document document;
-      String pathURL;
       try {
-        pathURL = "reports/report.html";
+    	String tester  = getClass().getClassLoader().getResource("report.html").toString();
+    	this.pathURL = "file:" + this.pathURL;
+    	System.out.println(pathURL);
+    	System.out.println(tester);
         document = ReportUtil.html5ParseDocument(pathURL, 0);
       } catch (IOException e) {
         e.printStackTrace();

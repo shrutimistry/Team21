@@ -25,6 +25,7 @@ import com.nineplusten.app.util.TextUtil;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -98,7 +99,9 @@ public class QueryViewController {
       @Override
       public void handle(WorkerStateEvent event) {
         configureTable();
-        dataTable.setItems(queryService.getValue());
+        ObservableList<TemplateData> result = queryService.getValue();
+        dataTable.setItems(result);
+        generateReportButton.setDisable(result.size() == 0);
         queryContainer.setVisible(true);
       }
     });
@@ -195,10 +198,6 @@ public class QueryViewController {
           e.printStackTrace();
         }
       }
-      /*
-       * try { PDDocument doc = PDDocument.load(selectedFile); doc.removePage(doc.getNumberOfPages()
-       * - 1); doc.save(selectedFile); } catch (IOException e) { e.printStackTrace(); }
-       */
     }
   }
 

@@ -4,10 +4,6 @@ import com.nineplusten.app.cache.Cache;
 import com.nineplusten.app.model.UserRole;
 import com.nineplusten.app.service.CreateUserService;
 import com.nineplusten.app.util.AnimationUtil;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -21,7 +17,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.util.Duration;
 
 public class AccountCreationController {
 
@@ -122,7 +117,7 @@ public class AccountCreationController {
           messageText.setText("Failed to create account. Please verify your input.");
         }
         messageContainer.setVisible(true);
-        
+
         Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
@@ -132,6 +127,11 @@ public class AccountCreationController {
         // DEBUG
         Throwable throwable = create.getException();
         throwable.printStackTrace();
+        messageContainer.getStyleClass().remove("alert-box-success");
+        messageContainer.getStyleClass().add("alert-box-fail");
+        messageText.setText("Failed to create account. Please verify your input.");
+        messageContainer.setVisible(true);
+        Platform.runLater(AnimationUtil.getAlertTimeline(messageContainer)::play);
       }
     });
 
